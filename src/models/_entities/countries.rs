@@ -12,8 +12,6 @@ pub struct Model {
     pub id: i32,
     pub name: Option<String>,
     pub code: Option<String>,
-    #[sea_orm(unique)]
-    pub uuid: Uuid,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
