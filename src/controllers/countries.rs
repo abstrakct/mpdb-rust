@@ -4,7 +4,10 @@
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use crate::models::_entities::countries::{ActiveModel, Entity, Model};
+use crate::models::_entities::{
+    cities,
+    countries::{ActiveModel, Entity, Model},
+};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
@@ -24,6 +27,12 @@ async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
 
 pub async fn list_countries(State(ctx): State<AppContext>) -> Result<Response> {
     format::json(Entity::find().all(&ctx.db).await?)
+}
+
+pub async fn list_cities(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Result<Response> {
+    let country = load_item(&ctx, id).await?;
+    let cities = country.find_related(cities::Entity).all(&ctx.db).await?;
+    format::json(cities)
 }
 
 pub async fn add_country(
@@ -71,4 +80,5 @@ pub fn routes() -> Routes {
         .add("/{id}", get(get_one_country))
         .add("/{id}", delete(remove_country))
         .add("/{id}", patch(update_country))
+        .add("/{id}/cities", get(list_cities))
 }
