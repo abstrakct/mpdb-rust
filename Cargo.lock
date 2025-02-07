@@ -2748,6 +2748,7 @@ dependencies = [
  "serde",
  "serde_json",
  "serial_test",
+ "sha1",
  "tokio",
  "tracing",
  "tracing-subscriber",
