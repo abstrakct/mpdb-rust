@@ -1,3 +1,4 @@
 pub mod _entities;
 pub mod users;
 pub mod countries;
+pub mod cities;
