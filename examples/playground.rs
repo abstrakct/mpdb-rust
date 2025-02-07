@@ -20,10 +20,10 @@ async fn main() -> loco_rs::Result<()> {
 
     let mut checksum = Sha1::new();
     checksum.update("Norway".as_bytes());
-    let result = checksum.finalize();
+    let _result = checksum.finalize();
     //let uuid = Builder::from_sha1_bytes(result.bytes());
 
-    let hex_hash = hex::encode(result);
+    // let hex_hash = hex::encode(result);
     //println!("result: {:?}", result[..8].to_string());
 
     //    let uuid = format!(
