@@ -28,6 +28,7 @@ pub async fn list_cities(State(ctx): State<AppContext>) -> Result<Response> {
     format::json(Entity::find().all(&ctx.db).await?)
 }
 
+#[allow(clippy::default_trait_access)]
 pub async fn add_city(
     State(ctx): State<AppContext>,
     Json(params): Json<Params>,

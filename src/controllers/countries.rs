@@ -35,6 +35,7 @@ pub async fn list_cities(Path(id): Path<i32>, State(ctx): State<AppContext>) -> 
     format::json(cities)
 }
 
+#[allow(clippy::default_trait_access)]
 pub async fn add_country(
     State(ctx): State<AppContext>,
     Json(params): Json<Params>,
