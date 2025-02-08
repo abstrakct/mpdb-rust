@@ -1,7 +1,7 @@
 #[allow(unused_imports)]
 use loco_rs::{cli::playground, prelude::*};
 use mpdb::{app::App, models::_entities::countries};
-use sha1::{Digest, Sha1};
+// use sha1::{Digest, Sha1};
 
 #[tokio::main]
 async fn main() -> loco_rs::Result<()> {
@@ -18,9 +18,9 @@ async fn main() -> loco_rs::Result<()> {
 
     // active_model.insert(&ctx.db).await.unwrap();
 
-    let mut checksum = Sha1::new();
-    checksum.update("Norway".as_bytes());
-    let _result = checksum.finalize();
+    // let mut checksum = Sha1::new();
+    // checksum.update("Norway".as_bytes());
+    // let _result = checksum.finalize();
     //let uuid = Builder::from_sha1_bytes(result.bytes());
 
     // let hex_hash = hex::encode(result);
