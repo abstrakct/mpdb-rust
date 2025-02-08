@@ -4,6 +4,8 @@ on:
     branches:
       - master
       - main
+    paths-ignore:
+      - "**/*.md"
   pull_request:
 
 env:
@@ -58,7 +60,7 @@ jobs:
 
     permissions:
       contents: read
-    
+
     services:
       redis:
         image: redis
@@ -106,4 +108,3 @@ jobs:
         env:
           REDIS_URL: redis://localhost:${{job.services.redis.ports[6379]}}
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres_test
-          
