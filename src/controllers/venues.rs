@@ -1,21 +1,21 @@
 #![allow(clippy::missing_errors_doc)]
 #![allow(clippy::unnecessary_struct_initialization)]
 #![allow(clippy::unused_async)]
+use axum::debug_handler;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
-use axum::debug_handler;
 
 use crate::models::_entities::venues::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
     pub name: String,
-    }
+}
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
-      item.name = Set(self.name.clone());
-      }
+        item.name = Set(self.name.clone());
+    }
 }
 
 async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
