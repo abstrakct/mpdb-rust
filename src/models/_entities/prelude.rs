@@ -3,3 +3,4 @@
 pub use super::cities::Entity as Cities;
 pub use super::countries::Entity as Countries;
 pub use super::users::Entity as Users;
+pub use super::venues::Entity as Venues;

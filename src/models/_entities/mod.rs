@@ -5,3 +5,4 @@ pub mod prelude;
 pub mod cities;
 pub mod countries;
 pub mod users;
+pub mod venues;
