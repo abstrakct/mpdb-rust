@@ -1,7 +1,7 @@
 # MPDB
 
 [![made-with-rust](https://img.shields.io/badge/Made%20with-Rust-1f425f.svg)](https://www.rust-lang.org/)
-[![GitHub commits](https://badgen.net/github/commits/Naereen/Strapdown.js)](https://github.com/abstrakct/mpdb-rust/commit/)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/abstrakct/mpdb-rust/ci.yaml)
 
 This is a rewrite of my MPDB, this time in Rust <3
 
