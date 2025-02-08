@@ -1,5 +1,5 @@
-use mpdb::app::App;
 use loco_rs::testing::prelude::*;
+use mpdb::app::App;
 use serial_test::serial;
 
 macro_rules! configure_insta {
