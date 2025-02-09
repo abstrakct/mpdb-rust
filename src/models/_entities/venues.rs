@@ -12,6 +12,8 @@ pub struct Model {
     pub id: i32,
     pub name: String,
     pub city_id: i32,
+    #[sea_orm(unique)]
+    pub unique_name: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

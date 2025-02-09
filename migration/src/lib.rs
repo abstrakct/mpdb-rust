@@ -9,6 +9,7 @@ mod m20250207_194001_make_country_name_unique;
 mod m20250207_204004_cities;
 mod m20250208_120854_venues;
 mod m20250208_123050_add_unique_name_to_venues;
+mod m20250209_104354_artists;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -22,6 +23,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250207_204004_cities::Migration),
             Box::new(m20250208_120854_venues::Migration),
             Box::new(m20250208_123050_add_unique_name_to_venues::Migration),
+            Box::new(m20250209_104354_artists::Migration),
             // inject-above (do not remove this comment)
         ]
     }
