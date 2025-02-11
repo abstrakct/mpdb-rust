@@ -8,3 +8,4 @@ mod artists;
 mod concerts;
 mod songs;
 mod songtitles;
+mod sets;
