@@ -2,6 +2,8 @@
 
 pub use super::artists::Entity as Artists;
 pub use super::cities::Entity as Cities;
+pub use super::concerts::Entity as Concerts;
 pub use super::countries::Entity as Countries;
+pub use super::songs::Entity as Songs;
 pub use super::users::Entity as Users;
 pub use super::venues::Entity as Venues;

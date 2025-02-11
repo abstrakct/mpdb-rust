@@ -51,6 +51,8 @@ impl Hooks for App {
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
         AppRoutes::with_default_routes() // controller routes below
+            .add_route(controllers::songs::routes())
+            .add_route(controllers::concerts::routes())
             .add_route(controllers::artists::routes())
             .add_route(controllers::venues::routes())
             .add_route(controllers::cities::routes())

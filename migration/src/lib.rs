@@ -10,6 +10,8 @@ mod m20250207_204004_cities;
 mod m20250208_120854_venues;
 mod m20250208_123050_add_unique_name_to_venues;
 mod m20250209_104354_artists;
+mod m20250211_175025_concerts;
+mod m20250211_175304_songs;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -24,6 +26,8 @@ impl MigratorTrait for Migrator {
             Box::new(m20250208_120854_venues::Migration),
             Box::new(m20250208_123050_add_unique_name_to_venues::Migration),
             Box::new(m20250209_104354_artists::Migration),
+            Box::new(m20250211_175025_concerts::Migration),
+            Box::new(m20250211_175304_songs::Migration),
             // inject-above (do not remove this comment)
         ]
     }

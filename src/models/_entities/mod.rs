@@ -4,6 +4,8 @@ pub mod prelude;
 
 pub mod artists;
 pub mod cities;
+pub mod concerts;
 pub mod countries;
+pub mod songs;
 pub mod users;
 pub mod venues;
