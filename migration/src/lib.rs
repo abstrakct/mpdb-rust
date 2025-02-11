@@ -14,6 +14,7 @@ mod m20250211_175025_concerts;
 mod m20250211_175304_songs;
 mod m20250211_180236_songtitles;
 mod m20250211_181553_sets;
+mod m20250211_181843_performances;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -32,6 +33,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250211_175304_songs::Migration),
             Box::new(m20250211_180236_songtitles::Migration),
             Box::new(m20250211_181553_sets::Migration),
+            Box::new(m20250211_181843_performances::Migration),
             // inject-above (do not remove this comment)
         ]
     }
