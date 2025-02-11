@@ -4,39 +4,31 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "songs")]
+#[sea_orm(table_name = "songtitles")]
 pub struct Model {
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: DateTimeWithTimeZone,
     #[sea_orm(primary_key)]
     pub id: i32,
-    #[sea_orm(column_type = "Text", nullable)]
-    pub notes: Option<String>,
-    pub artist_id: i32,
+    pub title: String,
+    pub is_default: bool,
+    pub song_id: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
     #[sea_orm(
-        belongs_to = "super::artists::Entity",
-        from = "Column::ArtistId",
-        to = "super::artists::Column::Id",
+        belongs_to = "super::songs::Entity",
+        from = "Column::SongId",
+        to = "super::songs::Column::Id",
         on_update = "Cascade",
         on_delete = "Cascade"
     )]
-    Artists,
-    #[sea_orm(has_many = "super::songtitles::Entity")]
-    Songtitles,
+    Songs,
 }
 
-impl Related<super::artists::Entity> for Entity {
+impl Related<super::songs::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Artists.def()
-    }
-}
-
-impl Related<super::songtitles::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Songtitles.def()
+        Relation::Songs.def()
     }
 }

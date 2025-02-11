@@ -6,3 +6,4 @@ pub mod venues;
 pub mod artists;
 pub mod concerts;
 pub mod songs;
+pub mod songtitles;
