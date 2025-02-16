@@ -1,5 +1,5 @@
+pub use super::_entities::songtitles::{ActiveModel, Entity, Model};
 use sea_orm::entity::prelude::*;
-pub use super::_entities::songtitles::{ActiveModel, Model, Entity};
 pub type Songtitles = Entity;
 
 #[async_trait::async_trait]

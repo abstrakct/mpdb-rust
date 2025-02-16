@@ -1,5 +1,5 @@
+pub use super::_entities::performances::{ActiveModel, Entity, Model};
 use sea_orm::entity::prelude::*;
-pub use super::_entities::performances::{ActiveModel, Model, Entity};
 pub type Performances = Entity;
 
 #[async_trait::async_trait]

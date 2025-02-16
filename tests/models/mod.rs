@@ -6,7 +6,7 @@ mod venues;
 
 mod artists;
 mod concerts;
+mod performances;
+mod sets;
 mod songs;
 mod songtitles;
-mod sets;
-mod performances;
