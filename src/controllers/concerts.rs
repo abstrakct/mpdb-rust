@@ -1,9 +1,10 @@
 #![allow(clippy::missing_errors_doc)]
 #![allow(clippy::unnecessary_struct_initialization)]
 #![allow(clippy::unused_async)]
+use axum::debug_handler;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
-use axum::debug_handler;
+use tracing::log::debug;
 
 use crate::models::_entities::concerts::{ActiveModel, Entity, Model};
 
@@ -11,13 +12,18 @@ use crate::models::_entities::concerts::{ActiveModel, Entity, Model};
 pub struct Params {
     pub date: Date,
     pub disambiguation: Option<String>,
-    }
+}
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
-      item.date = Set(self.date.clone());
-      item.disambiguation = Set(self.disambiguation.clone());
-      }
+        item.date = Set(self.date);
+        item.disambiguation = Set(self.disambiguation.clone());
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct InputData {
+    pub status: String,
 }
 
 async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
@@ -35,7 +41,22 @@ pub async fn add(State(ctx): State<AppContext>, Json(params): Json<Params>) -> R
     let mut item = ActiveModel {
         ..Default::default()
     };
+    debug!("Received: {:?}", params);
     params.update(&mut item);
+    let item = item.insert(&ctx.db).await?;
+    format::json(item)
+}
+
+#[debug_handler]
+pub async fn add_new(
+    State(ctx): State<AppContext>,
+    Json(input): Json<InputData>,
+) -> Result<Response> {
+    let mut item = ActiveModel {
+        ..Default::default()
+    };
+    //debug!("Received: {:?}", params);
+    //params.update(&mut item);
     let item = item.insert(&ctx.db).await?;
     format::json(item)
 }
@@ -69,6 +90,7 @@ pub fn routes() -> Routes {
         .prefix("api/concerts/")
         .add("/", get(list))
         .add("/", post(add))
+        .add("/new", post(add_new))
         .add("{id}", get(get_one))
         .add("{id}", delete(remove))
         .add("{id}", put(update))
