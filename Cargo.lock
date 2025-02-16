@@ -2742,6 +2742,7 @@ dependencies = [
  "insta",
  "loco-rs",
  "migration",
+ "mpdblib",
  "regex",
  "rstest",
  "sea-orm",
@@ -2754,6 +2755,15 @@ dependencies = [
  "unic-langid",
  "uuid",
  "validator",
+]
+
+[[package]]
+name = "mpdblib"
+version = "0.1.0"
+source = "git+http://git.darkstar.local/rolf/mpdblib.git#27efc1f70be9916dc448c200023f2a29d2cef531"
+dependencies = [
+ "serde",
+ "serde-xml-rust",
 ]
 
 [[package]]
@@ -4174,6 +4184,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "02fc4265df13d6fa1d00ecff087228cc0a2b5f3c0e87e258d8b94a156e984c70"
 dependencies = [
  "serde_derive",
+]
+
+[[package]]
+name = "serde-xml-rust"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "662b17c24bfc6e11d411126768b727fbca2f33b7c2b6e21cdbb7cc31541c60d4"
+dependencies = [
+ "log",
+ "serde",
+ "thiserror 1.0.69",
+ "xml-rs",
 ]
 
 [[package]]
@@ -6062,6 +6084,12 @@ checksum = "05f360fc0b24296329c78fda852a1e9ae82de9cf7b27dae4b7f62f118f77b9ed"
 dependencies = [
  "tap",
 ]
+
+[[package]]
+name = "xml-rs"
+version = "0.8.25"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c5b940ebc25896e71dd073bad2dbaa2abfe97b0a391415e22ad1326d9c54e3c4"
 
 [[package]]
 name = "yansi"
