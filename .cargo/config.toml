@@ -3,3 +3,6 @@ loco = "run --"
 loco-tool = "run --"
 
 playground = "run --example playground"
+
+[build]
+target-dir = "/tmp/mpdb"

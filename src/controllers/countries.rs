@@ -39,7 +39,7 @@ pub async fn list_cities(Path(id): Path<i32>, State(ctx): State<AppContext>) -> 
 pub async fn add_country(
     State(ctx): State<AppContext>,
     Json(params): Json<Params>,
-) -> Result<Response> {
+) -> Result<impl IntoResponse> {
     let mut item: ActiveModel = Default::default();
     params.update(&mut item); // Updates item with values from params (!)
     let item = item.insert(&ctx.db).await?;
