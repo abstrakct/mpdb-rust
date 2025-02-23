@@ -12,11 +12,13 @@ use crate::models::_entities::{
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
     pub name: Option<String>,
+    pub slug: Option<String>,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.name = Set(self.name.clone().unwrap());
+        item.slug = Set(self.slug.clone().unwrap());
     }
 }
 
