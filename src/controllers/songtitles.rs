@@ -11,12 +11,14 @@ use crate::models::_entities::songtitles::{ActiveModel, Entity, Model};
 pub struct Params {
     pub title: String,
     pub is_default: bool,
+    pub slug: String,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.title = Set(self.title.clone());
-        item.is_default = Set(self.is_default.clone());
+        item.is_default = Set(self.is_default);
+        item.slug = Set(self.slug.clone());
     }
 }
 

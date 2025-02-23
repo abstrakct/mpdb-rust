@@ -13,6 +13,8 @@ pub struct Model {
     pub title: String,
     pub is_default: bool,
     pub song_id: i32,
+    #[sea_orm(unique)]
+    pub slug: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
