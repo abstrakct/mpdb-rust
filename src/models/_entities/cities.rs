@@ -12,6 +12,7 @@ pub struct Model {
     pub id: i32,
     pub name: String,
     pub country_id: i32,
+    pub slug: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

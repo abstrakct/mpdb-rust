@@ -10,12 +10,14 @@ use crate::models::_entities::cities::{ActiveModel, Entity, Model};
 pub struct Params {
     pub name: Option<String>,
     pub country_id: i32,
+    pub slug: Option<String>,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.name = Set(self.name.clone().unwrap());
         item.country_id = Set(self.country_id);
+        item.slug = Set(self.slug.clone().unwrap());
     }
 }
 
