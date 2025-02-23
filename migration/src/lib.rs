@@ -19,6 +19,7 @@ mod m20250223_115919_add_slug_to_countries;
 mod m20250223_120940_add_slug_to_cities;
 mod m20250223_130036_add_slug_to_venues;
 mod m20250223_143004_add_slug_to_songtitles;
+mod m20250223_143837_add_slug_to_artists;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -42,6 +43,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250223_120940_add_slug_to_cities::Migration),
             Box::new(m20250223_130036_add_slug_to_venues::Migration),
             Box::new(m20250223_143004_add_slug_to_songtitles::Migration),
+            Box::new(m20250223_143837_add_slug_to_artists::Migration),
             // inject-above (do not remove this comment)
         ]
     }

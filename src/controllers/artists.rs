@@ -10,11 +10,13 @@ use crate::models::_entities::artists::{ActiveModel, Entity, Model};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
     pub name: String,
+    pub slug: String,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.name = Set(self.name.clone());
+        item.slug = Set(self.slug.clone());
     }
 }
 
