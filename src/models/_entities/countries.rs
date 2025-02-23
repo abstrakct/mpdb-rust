@@ -13,6 +13,7 @@ pub struct Model {
     #[sea_orm(unique)]
     pub name: String,
     pub code: Option<String>,
+    #[sea_orm(unique)]
     pub slug: String,
 }
 
