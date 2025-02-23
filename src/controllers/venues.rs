@@ -10,11 +10,15 @@ use crate::models::_entities::venues::{ActiveModel, Entity, Model};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
     pub name: String,
+    pub city_id: i32,
+    pub unique_name: String,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.name = Set(self.name.clone());
+        item.city_id = Set(self.city_id);
+        item.unique_name = Set(self.unique_name.clone());
     }
 }
 
