@@ -17,6 +17,7 @@ mod m20250211_181553_sets;
 mod m20250211_181843_performances;
 mod m20250223_115919_add_slug_to_countries;
 mod m20250223_120940_add_slug_to_cities;
+mod m20250223_130036_add_slug_to_venues;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -38,6 +39,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250211_181843_performances::Migration),
             Box::new(m20250223_115919_add_slug_to_countries::Migration),
             Box::new(m20250223_120940_add_slug_to_cities::Migration),
+            Box::new(m20250223_130036_add_slug_to_venues::Migration),
             // inject-above (do not remove this comment)
         ]
     }

@@ -12,6 +12,7 @@ pub struct Params {
     pub name: String,
     pub city_id: i32,
     pub unique_name: String,
+    pub slug: String,
 }
 
 impl Params {
@@ -19,6 +20,7 @@ impl Params {
         item.name = Set(self.name.clone());
         item.city_id = Set(self.city_id);
         item.unique_name = Set(self.unique_name.clone());
+        item.slug = Set(self.slug.clone());
     }
 }
 
