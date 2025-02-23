@@ -50,9 +50,9 @@ pub async fn add(State(ctx): State<AppContext>, Json(params): Json<Params>) -> R
 #[debug_handler]
 pub async fn add_new(
     State(ctx): State<AppContext>,
-    Json(input): Json<InputData>,
+    Json(_input): Json<InputData>,
 ) -> Result<Response> {
-    let mut item = ActiveModel {
+    let item = ActiveModel {
         ..Default::default()
     };
     //debug!("Received: {:?}", params);
