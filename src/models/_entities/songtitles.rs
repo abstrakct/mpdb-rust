@@ -15,7 +15,7 @@ pub struct Model {
     pub song_id: i32,
     #[sea_orm(unique)]
     pub slug: String,
-    pub alias_for: i32,
+    pub alias_for: Option<i32>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
