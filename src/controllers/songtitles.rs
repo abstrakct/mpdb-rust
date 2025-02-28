@@ -13,6 +13,7 @@ pub struct Params {
     pub is_default: bool,
     pub slug: String,
     pub alias_for: Option<i32>,
+    pub song_id: i32,
 }
 
 impl Params {
@@ -21,6 +22,7 @@ impl Params {
         item.is_default = Set(self.is_default);
         item.slug = Set(self.slug.clone());
         item.alias_for = Set(self.alias_for);
+        item.song_id = Set(self.song_id);
     }
 }
 
