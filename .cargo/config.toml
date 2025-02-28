@@ -4,5 +4,5 @@ loco-tool = "run --"
 
 playground = "run --example playground"
 
-[build]
-target-dir = "/tmp/mpdb"
+# [build]
+# target-dir = "/tmp/mpdb"
