@@ -43,3 +43,9 @@ impl Related<super::songs::Entity> for Entity {
         Relation::Songs.def()
     }
 }
+
+impl Related<super::songtitles::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::SongTitles.def()
+    }
+}
