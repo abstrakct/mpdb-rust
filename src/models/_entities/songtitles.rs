@@ -15,6 +15,7 @@ pub struct Model {
     pub song_id: i32,
     #[sea_orm(unique)]
     pub slug: String,
+    pub alias_for: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
@@ -27,6 +28,14 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Songs,
+    #[sea_orm(
+        belongs_to = "super::songtitles::Entity",
+        from = "Column::AliasFor",
+        to = "super::songtitles::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
+    SongTitles,
 }
 
 impl Related<super::songs::Entity> for Entity {
