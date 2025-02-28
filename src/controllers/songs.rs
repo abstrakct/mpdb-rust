@@ -9,12 +9,14 @@ use crate::models::_entities::songs::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
+    pub artist_id: i32,
     pub notes: Option<String>,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.notes = Set(self.notes.clone());
+        item.artist_id = Set(self.artist_id);
     }
 }
 
