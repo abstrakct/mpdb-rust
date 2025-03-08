@@ -10,3 +10,5 @@ pub mod performances;
 pub mod sets;
 pub mod songs;
 pub mod songtitles;
+
+pub mod dashboard;
