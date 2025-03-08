@@ -5,6 +5,7 @@ use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 
 use crate::models::_entities::cities::{ActiveModel, Entity, Model};
+use crate::views;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
@@ -62,7 +63,11 @@ pub async fn get_one_city(Path(id): Path<i32>, State(ctx): State<AppContext>) ->
     format::json(load_item(&ctx, id).await?)
 }
 
-pub fn routes() -> Routes {
+pub async fn view(ViewEngine(v): ViewEngine<TeraView>) -> Result<impl IntoResponse> {
+    views::cities::home(v)
+}
+
+pub fn api_routes() -> Routes {
     Routes::new()
         .prefix("api/cities/")
         .add("/", get(list_cities))
@@ -70,4 +75,8 @@ pub fn routes() -> Routes {
         .add("/{id}", get(get_one_city))
         .add("/{id}", delete(remove_city))
         .add("/{id}", patch(update_city))
+}
+
+pub fn web_routes() -> Routes {
+    Routes::new().prefix("cities/").add("/", get(view))
 }

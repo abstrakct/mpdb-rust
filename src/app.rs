@@ -51,6 +51,7 @@ impl Hooks for App {
 
     fn routes(_ctx: &AppContext) -> AppRoutes {
         AppRoutes::with_default_routes() // controller routes below
+            // API routes
             .add_route(controllers::performances::routes())
             .add_route(controllers::sets::routes())
             .add_route(controllers::songtitles::routes())
@@ -58,10 +59,12 @@ impl Hooks for App {
             .add_route(controllers::concerts::routes())
             .add_route(controllers::artists::routes())
             .add_route(controllers::venues::routes())
-            .add_route(controllers::cities::routes())
+            .add_route(controllers::cities::api_routes())
             .add_route(controllers::countries::routes())
             .add_route(controllers::auth::routes())
             .add_route(controllers::dashboard::routes())
+            // Web routes
+            .add_route(controllers::cities::web_routes())
     }
     async fn connect_workers(ctx: &AppContext, queue: &Queue) -> Result<()> {
         queue.register(DownloadWorker::build(ctx)).await?;
