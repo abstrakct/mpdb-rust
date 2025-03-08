@@ -6,10 +6,8 @@
   <br/>
   cities:
   <ul>
-    {% raw %}
-    {% for city in cities %}
-      <li>{{ city.name }}</li>
+    {% for city in items %}
+      <li>{{ city.name }} - slug: {{ city.slug }}</li>
     {% endfor %}
-    {% endraw %}
   </ul>
 </body></html>

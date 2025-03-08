@@ -1,5 +1,6 @@
+use crate::models::_entities::cities;
 use loco_rs::prelude::*;
 
-pub fn home(v: impl ViewRenderer) -> Result<impl IntoResponse> {
-    format::render().view(&v, "cities.html", data!({}))
+pub fn list(v: &impl ViewRenderer, items: &Vec<cities::Model>) -> Result<Response> {
+    format::render().view(v, "cities.html", data!({"items": items}))
 }

@@ -1,10 +1,12 @@
 #![allow(clippy::missing_errors_doc)]
 #![allow(clippy::unnecessary_struct_initialization)]
 #![allow(clippy::unused_async)]
+use axum::debug_handler;
 use loco_rs::prelude::*;
+use sea_orm::{sea_query::Order, QueryOrder};
 use serde::{Deserialize, Serialize};
 
-use crate::models::_entities::cities::{ActiveModel, Entity, Model};
+use crate::models::_entities::cities::{ActiveModel, Column, Entity, Model};
 use crate::views;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -63,8 +65,16 @@ pub async fn get_one_city(Path(id): Path<i32>, State(ctx): State<AppContext>) ->
     format::json(load_item(&ctx, id).await?)
 }
 
-pub async fn view(ViewEngine(v): ViewEngine<TeraView>) -> Result<impl IntoResponse> {
-    views::cities::home(v)
+#[debug_handler]
+pub async fn list(
+    ViewEngine(v): ViewEngine<TeraView>,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let items = Entity::find()
+        .order_by(Column::Name, Order::Desc)
+        .all(&ctx.db)
+        .await?;
+    views::cities::list(&v, &items)
 }
 
 pub fn api_routes() -> Routes {
@@ -78,5 +88,5 @@ pub fn api_routes() -> Routes {
 }
 
 pub fn web_routes() -> Routes {
-    Routes::new().prefix("cities/").add("/", get(view))
+    Routes::new().prefix("cities/").add("/", get(list))
 }
