@@ -16,6 +16,7 @@ pub struct Params {
     pub sort_order: Option<i32>,
     pub venue_id: i32,
     pub artist_id: i32,
+    pub slug: String,
 }
 
 impl Params {
@@ -26,6 +27,7 @@ impl Params {
         item.sort_order = Set(self.sort_order);
         item.venue_id = Set(self.venue_id);
         item.artist_id = Set(self.artist_id);
+        item.slug = Set(self.slug.clone());
     }
 }
 
