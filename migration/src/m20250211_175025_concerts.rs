@@ -13,8 +13,10 @@ impl MigrationTrait for Migration {
             &[
                 ("date", ColType::Date),
                 ("disambiguation", ColType::StringNull),
+                ("sort_order", ColType::IntegerNull),
+                ("source", ColType::StringNull),
             ],
-            &[("venue", "")],
+            &[("venue", ""), ("artist", "")],
         )
         .await
     }

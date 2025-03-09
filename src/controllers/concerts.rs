@@ -12,12 +12,20 @@ use crate::models::_entities::concerts::{ActiveModel, Entity, Model};
 pub struct Params {
     pub date: Date,
     pub disambiguation: Option<String>,
+    pub source: Option<String>,
+    pub sort_order: Option<i32>,
+    pub venue_id: i32,
+    pub artist_id: i32,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.date = Set(self.date);
         item.disambiguation = Set(self.disambiguation.clone());
+        item.source = Set(self.source.clone());
+        item.sort_order = Set(self.sort_order);
+        item.venue_id = Set(self.venue_id);
+        item.artist_id = Set(self.artist_id);
     }
 }
 

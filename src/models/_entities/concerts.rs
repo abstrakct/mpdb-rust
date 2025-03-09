@@ -13,6 +13,9 @@ pub struct Model {
     pub date: Date,
     pub disambiguation: Option<String>,
     pub venue_id: i32,
+    pub artist_id: i32,
+    pub source: Option<String>,
+    pub sort_order: Option<i32>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
