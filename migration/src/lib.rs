@@ -21,6 +21,7 @@ mod m20250223_130036_add_slug_to_venues;
 mod m20250223_143004_add_slug_to_songtitles;
 mod m20250223_143837_add_slug_to_artists;
 mod m20250228_192109_add_alias_for_to_songtitles;
+mod m20250309_103052_add_slug_to_concerts;
 pub struct Migrator;
 
 #[async_trait::async_trait]
@@ -46,6 +47,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20250223_143004_add_slug_to_songtitles::Migration),
             Box::new(m20250223_143837_add_slug_to_artists::Migration),
             Box::new(m20250228_192109_add_alias_for_to_songtitles::Migration),
+            Box::new(m20250309_103052_add_slug_to_concerts::Migration),
             // inject-above (do not remove this comment)
         ]
     }

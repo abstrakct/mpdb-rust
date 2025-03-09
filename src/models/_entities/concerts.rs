@@ -16,6 +16,7 @@ pub struct Model {
     pub artist_id: i32,
     pub source: Option<String>,
     pub sort_order: Option<i32>,
+    pub slug: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
