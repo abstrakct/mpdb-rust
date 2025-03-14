@@ -10,11 +10,19 @@ use crate::models::_entities::performances::{ActiveModel, Entity, Model};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
     pub segue: bool,
+    pub set_id: i32,
+    pub concert_id: i32,
+    pub song_id: i32,
+    pub artist_id: i32,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
-        item.segue = Set(self.segue.clone());
+        item.segue = Set(self.segue);
+        item.set_id = Set(self.set_id);
+        item.concert_id = Set(self.concert_id);
+        item.song_id = Set(self.song_id);
+        item.artist_id = Set(self.artist_id);
     }
 }
 

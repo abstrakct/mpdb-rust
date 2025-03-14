@@ -11,12 +11,14 @@ use crate::models::_entities::sets::{ActiveModel, Entity, Model};
 pub struct Params {
     pub name: Option<String>,
     pub unique_name: String,
+    pub concert_id: i32,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.name = Set(self.name.clone());
         item.unique_name = Set(self.unique_name.clone());
+        item.concert_id = Set(self.concert_id);
     }
 }
 
