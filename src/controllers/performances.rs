@@ -14,6 +14,7 @@ pub struct Params {
     pub concert_id: i32,
     pub song_id: i32,
     pub artist_id: i32,
+    pub songtitle_id: i32,
 }
 
 impl Params {
@@ -23,6 +24,7 @@ impl Params {
         item.concert_id = Set(self.concert_id);
         item.song_id = Set(self.song_id);
         item.artist_id = Set(self.artist_id);
+        item.songtitle_id = Set(self.songtitle_id);
     }
 }
 

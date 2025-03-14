@@ -16,6 +16,7 @@ impl MigrationTrait for Migration {
                 ("concerts", ""),
                 ("songs", ""),
                 ("artists", ""),
+                ("songtitles", ""),
             ],
         )
         .await
