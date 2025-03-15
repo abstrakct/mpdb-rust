@@ -20,6 +20,8 @@ pub struct Model {
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    #[sea_orm(has_many = "super::performances::Entity")]
+    Performances,
     #[sea_orm(
         belongs_to = "super::songs::Entity",
         from = "Column::SongId",
@@ -28,24 +30,16 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Songs,
-    #[sea_orm(
-        belongs_to = "super::songtitles::Entity",
-        from = "Column::AliasFor",
-        to = "super::songtitles::Column::Id",
-        on_update = "Cascade",
-        on_delete = "Cascade"
-    )]
-    SongTitles,
+}
+
+impl Related<super::performances::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Performances.def()
+    }
 }
 
 impl Related<super::songs::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Songs.def()
-    }
-}
-
-impl Related<super::songtitles::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::SongTitles.def()
     }
 }
