@@ -12,15 +12,24 @@ pub struct Model {
     pub id: i32,
     pub date: Date,
     pub disambiguation: Option<String>,
+    pub sort_order: Option<i32>,
+    pub source: Option<String>,
     pub venue_id: i32,
     pub artist_id: i32,
-    pub source: Option<String>,
-    pub sort_order: Option<i32>,
+    #[sea_orm(unique)]
     pub slug: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    #[sea_orm(
+        belongs_to = "super::artists::Entity",
+        from = "Column::ArtistId",
+        to = "super::artists::Column::Id",
+        on_update = "Cascade",
+        on_delete = "Cascade"
+    )]
+    Artists,
     #[sea_orm(has_many = "super::performances::Entity")]
     Performances,
     #[sea_orm(has_many = "super::sets::Entity")]
@@ -33,6 +42,12 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Venues,
+}
+
+impl Related<super::artists::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::Artists.def()
+    }
 }
 
 impl Related<super::performances::Entity> for Entity {
