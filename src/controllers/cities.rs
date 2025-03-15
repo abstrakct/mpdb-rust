@@ -74,6 +74,7 @@ pub async fn list(
         .order_by(Column::Name, Order::Desc)
         .all(&ctx.db)
         .await?;
+
     views::cities::list(&v, &items)
 }
 
