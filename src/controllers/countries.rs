@@ -11,8 +11,6 @@ use crate::models::_entities::{
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
-    pub name: Option<String>,
-    pub slug: Option<String>,
     pub name: String,
     pub slug: String,
     pub code: Option<String>,
