@@ -1,6 +1,8 @@
 #![allow(clippy::missing_errors_doc)]
 #![allow(clippy::unnecessary_struct_initialization)]
 #![allow(clippy::unused_async)]
+
+use axum::debug_handler;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 
@@ -70,6 +72,18 @@ pub async fn update_country(
     format::json(item)
 }
 
+pub async fn get_one_country_by_slug(
+    Path(slug): Path<String>,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let item = Entity::find()
+        .filter(crate::models::_entities::countries::Column::Slug.eq(slug))
+        .one(&ctx.db)
+        .await?
+        .unwrap();
+    format::json(load_item(&ctx, item.id).await?)
+}
+
 pub async fn get_one_country(
     Path(id): Path<i32>,
     State(ctx): State<AppContext>,
@@ -86,6 +100,15 @@ pub fn api_routes() -> Routes {
         .add("/{id}", delete(remove_country))
         .add("/{id}", patch(update_country))
         .add("/{id}/cities", get(list_cities))
+}
+
+pub fn api_by_slug_routes() -> Routes {
+    Routes::new()
+        .prefix("api/countries/by-slug/")
+        .add("/{slug}", get(get_one_country_by_slug))
+    // .add("/{id}", delete(remove_country))
+    // .add("/{id}", patch(update_country))
+    // .add("/{slug}/cities", get(list_cities))
 }
 
 #[debug_handler]
