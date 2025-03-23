@@ -18,6 +18,23 @@ pub struct Params {
     pub code: Option<String>,
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct CountryResponse {
+    pub name: String,
+    pub slug: String,
+    pub code: Option<String>,
+}
+
+impl From<Model> for CountryResponse {
+    fn from(item: Model) -> Self {
+        Self {
+            name: item.name,
+            slug: item.slug,
+            code: item.code,
+        }
+    }
+}
+
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.name = Set(self.name.clone());
