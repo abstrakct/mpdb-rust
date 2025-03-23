@@ -60,11 +60,13 @@ impl Hooks for App {
             .add_route(controllers::artists::routes())
             .add_route(controllers::venues::routes())
             .add_route(controllers::cities::api_routes())
-            .add_route(controllers::countries::routes())
+            .add_route(controllers::countries::api_routes())
+            .add_route(controllers::countries::api_by_slug_routes())
             .add_route(controllers::auth::routes())
             .add_route(controllers::dashboard::routes())
             // Web routes
             .add_route(controllers::cities::web_routes())
+            .add_route(controllers::countries::web_routes())
     }
     async fn connect_workers(ctx: &AppContext, queue: &Queue) -> Result<()> {
         queue.register(DownloadWorker::build(ctx)).await?;
