@@ -77,7 +77,7 @@ pub async fn get_one_country(
     format::json(load_item(&ctx, id).await?)
 }
 
-pub fn routes() -> Routes {
+pub fn api_routes() -> Routes {
     Routes::new()
         .prefix("api/countries/")
         .add("/", get(list_countries))
@@ -86,4 +86,16 @@ pub fn routes() -> Routes {
         .add("/{id}", delete(remove_country))
         .add("/{id}", patch(update_country))
         .add("/{id}/cities", get(list_cities))
+}
+
+pub fn web_routes() -> Routes {
+    Routes::new()
+        .prefix("countries/")
+        .add("/", get(list_countries_view))
+        .add("/{id}", get(show_country_view))
+    // .add("/", post(add_country))
+    // .add("/{id}", get(get_one_country))
+    // .add("/{id}", delete(remove_country))
+    // .add("/{id}", patch(update_country))
+    // .add("/{id}/cities", get(list_cities))
 }
