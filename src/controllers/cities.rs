@@ -7,13 +7,23 @@ use sea_orm::{sea_query::Order, QueryOrder};
 use serde::{Deserialize, Serialize};
 
 use crate::models::_entities::cities::{ActiveModel, Column, Entity, Model};
+use crate::models::_entities::countries;
 use crate::views;
+
+use super::countries::CountryResponse;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
     pub name: Option<String>,
     pub country_id: i32,
     pub slug: Option<String>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+struct CityResponse {
+    pub name: String,
+    pub slug: String,
+    pub country: CountryResponse,
 }
 
 impl Params {
@@ -29,8 +39,39 @@ async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
     item.ok_or_else(|| Error::NotFound)
 }
 
+async fn load_item_with_country(
+    ctx: &AppContext,
+    id: i32,
+) -> Result<(Model, Option<countries::Model>)> {
+    let item = Entity::find_by_id(id)
+        .find_also_related(countries::Entity)
+        .one(&ctx.db)
+        .await?;
+    // let country = item?.find_related(countries::Entity).one(&ctx.db).await?;
+
+    item.ok_or_else(|| Error::NotFound)
+}
+
 pub async fn list_cities(State(ctx): State<AppContext>) -> Result<Response> {
     format::json(Entity::find().all(&ctx.db).await?)
+}
+
+pub async fn list_cities_with_countries(State(ctx): State<AppContext>) -> Result<Response> {
+    let data = Entity::find()
+        .find_also_related(countries::Entity)
+        .all(&ctx.db)
+        .await?;
+
+    let result = data
+        .into_iter()
+        .map(|(city, country)| CityResponse {
+            name: city.name,
+            slug: city.slug,
+            country: country.unwrap().into(),
+        })
+        .collect::<Vec<CityResponse>>();
+
+    format::json(result)
 }
 
 #[allow(clippy::default_trait_access)]
@@ -86,6 +127,7 @@ pub fn api_routes() -> Routes {
         .add("/{id}", get(get_one_city))
         .add("/{id}", delete(remove_city))
         .add("/{id}", patch(update_city))
+        .add("/with-countries", get(list_cities_with_countries))
 }
 
 pub fn web_routes() -> Routes {
