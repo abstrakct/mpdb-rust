@@ -88,6 +88,29 @@ pub fn api_routes() -> Routes {
         .add("/{id}/cities", get(list_cities))
 }
 
+#[debug_handler]
+pub async fn list_countries_view(
+    ViewEngine(v): ViewEngine<TeraView>,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let items = Entity::find()
+        // .order_by(Column::Name, Order::Desc)
+        .all(&ctx.db)
+        .await?;
+
+    crate::views::countries::list(&v, &items)
+}
+
+#[debug_handler]
+pub async fn show_country_view(
+    Path(id): Path<i32>,
+    ViewEngine(v): ViewEngine<TeraView>,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let item = load_item(&ctx, id).await?;
+    crate::views::countries::show(&v, &item)
+}
+
 pub fn web_routes() -> Routes {
     Routes::new()
         .prefix("countries/")
