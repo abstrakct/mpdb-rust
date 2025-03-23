@@ -13,12 +13,16 @@ use crate::models::_entities::{
 pub struct Params {
     pub name: Option<String>,
     pub slug: Option<String>,
+    pub name: String,
+    pub slug: String,
+    pub code: Option<String>,
 }
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
-        item.name = Set(self.name.clone().unwrap());
-        item.slug = Set(self.slug.clone().unwrap());
+        item.name = Set(self.name.clone());
+        item.slug = Set(self.slug.clone());
+        item.code = Set(self.code.clone());
     }
 }
 
