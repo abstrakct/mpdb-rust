@@ -21,6 +21,7 @@ pub struct Params {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 struct CityResponse {
+    pub id: i32,
     pub name: String,
     pub slug: String,
     pub country: CountryResponse,
@@ -65,6 +66,7 @@ pub async fn list_cities_with_countries(State(ctx): State<AppContext>) -> Result
     let result = data
         .into_iter()
         .map(|(city, country)| CityResponse {
+            id: city.id,
             name: city.name,
             slug: city.slug,
             country: country.unwrap().into(),

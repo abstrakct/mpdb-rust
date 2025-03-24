@@ -20,6 +20,7 @@ pub struct Params {
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct CountryResponse {
+    pub id: i32,
     pub name: String,
     pub slug: String,
     pub code: Option<String>,
@@ -28,6 +29,7 @@ pub struct CountryResponse {
 impl From<Model> for CountryResponse {
     fn from(item: Model) -> Self {
         Self {
+            id: item.id,
             name: item.name,
             slug: item.slug,
             code: item.code,
