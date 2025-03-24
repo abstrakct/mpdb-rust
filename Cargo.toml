@@ -5,7 +5,7 @@ name = "mpdb"
 version = "0.1.0"
 edition = "2021"
 publish = false
-default-run = "mpdb-cli"
+default-run = "mpdb"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -17,21 +17,14 @@ mpdblib = { git = "http://git.darkstar.local/rolf/mpdblib.git" }
 loco-rs = { workspace = true }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1" }
-tokio = { version = "1.33.0", default-features = false, features = [
-    "rt-multi-thread",
-] }
+tokio = { version = "1.33.0", default-features = false, features = ["rt-multi-thread"] }
 async-trait = { version = "0.1.74" }
 axum = { version = "0.8.1" }
 tracing = { version = "0.1.40" }
 tracing-subscriber = { version = "0.3.17", features = ["env-filter", "json"] }
 regex = { version = "1.11.1" }
 migration = { path = "migration" }
-sea-orm = { version = "1.1.0", features = [
-    "sqlx-sqlite",
-    "sqlx-postgres",
-    "runtime-tokio-rustls",
-    "macros",
-] }
+sea-orm = { version = "1.1.0", features = ["sqlx-sqlite", "sqlx-postgres", "runtime-tokio-rustls", "macros"] }
 chrono = { version = "0.4" }
 validator = { version = "0.19" }
 uuid = { version = "1.13", features = ["v4", "v5"] }
@@ -43,7 +36,7 @@ unic-langid = { version = "0.9.4" }
 # /view engine
 
 [[bin]]
-name = "mpdb-cli"
+name = "mpdb"
 path = "src/bin/main.rs"
 required-features = []
 
