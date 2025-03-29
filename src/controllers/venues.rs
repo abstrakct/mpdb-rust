@@ -81,28 +81,33 @@ pub async fn load_by_slug(ctx: &AppContext, slug: String) -> Result<VenueRespons
     use crate::models::_entities::{cities, countries};
     let venue = Entity::find()
         .filter(crate::models::_entities::venues::Column::Slug.eq(slug))
+        .find_also_related(cities::Entity)
+        .and_also_related(countries::Entity)
         .one(&ctx.db)
         .await?
         .unwrap();
 
-    let city = cities::Entity::find_by_id(venue.city_id)
-        .one(&ctx.db)
-        .await?
-        .unwrap();
+    // let city = cities::Entity::find_by_id(venue.city_id)
+    //     .one(&ctx.db)
+    //     .await?
+    //     .unwrap();
 
-    let country = countries::Entity::find_by_id(city.country_id)
-        .one(&ctx.db)
-        .await?
-        .unwrap();
+    // let country = countries::Entity::find_by_id(city.country_id)
+    //     .one(&ctx.db)
+    //     .await?
+    //     .unwrap();
+
+    let city = venue.1.unwrap();
+    let country = venue.2.unwrap();
 
     Ok(VenueResponse {
-        id: venue.id,
-        name: venue.name,
-        slug: venue.slug,
+        id: venue.0.id,
+        name: venue.0.name,
+        slug: venue.0.slug,
         city: CityResponse {
             id: city.id,
-            name: city.name,
-            slug: city.slug,
+            name: city.name.clone(),
+            slug: city.slug.clone(),
             country: country.into(),
         },
     })
