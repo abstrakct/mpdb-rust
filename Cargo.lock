@@ -2509,29 +2509,31 @@ dependencies = [
 
 [[package]]
 name = "loco-gen"
-version = "0.14.1"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0ec8762a66ade27c5157288ca46db51a77bbd95cb2d7ad87bcaada9621e3a4d9"
+checksum = "af6a65aa52f43363e67c8e300d997f55a79bf5b7b3ad02e794dfd0414d012ecd"
 dependencies = [
  "chrono",
  "clap",
  "colored",
  "cruet 0.14.0",
  "duct",
+ "heck 0.4.1",
  "include_dir",
  "regex",
  "rrgen",
  "serde",
  "serde_json",
+ "tera",
  "thiserror 1.0.69",
  "tracing",
 ]
 
 [[package]]
 name = "loco-rs"
-version = "0.14.1"
+version = "0.15.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "19decee5529e36ffd3e22f83cf601c1fcb35a8932886fc33c19e8482bc1baf88"
+checksum = "c1122ebb1e981888d26ecbf33e323bf9816b3748b57a3fd5e67b37cfe44750e3"
 dependencies = [
  "argon2",
  "async-trait",
@@ -2550,7 +2552,6 @@ dependencies = [
  "duct",
  "duct_sh",
  "english-to-cron",
- "fs-err",
  "futures-util",
  "heck 0.4.1",
  "hyper",
@@ -2559,7 +2560,6 @@ dependencies = [
  "jsonwebtoken",
  "lettre",
  "loco-gen",
- "mime",
  "moka",
  "opendal",
  "rand 0.8.5",
@@ -2589,7 +2589,7 @@ dependencies = [
  "tracing-subscriber",
  "ulid",
  "uuid",
- "validator",
+ "validator 0.20.0",
 ]
 
 [[package]]
@@ -2770,7 +2770,7 @@ dependencies = [
  "tracing-subscriber",
  "unic-langid",
  "uuid",
- "validator",
+ "validator 0.19.0",
 ]
 
 [[package]]
@@ -5619,14 +5619,29 @@ dependencies = [
  "serde_derive",
  "serde_json",
  "url",
+]
+
+[[package]]
+name = "validator"
+version = "0.20.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "43fb22e1a008ece370ce08a3e9e4447a910e92621bb49b85d6e48a45397e7cfa"
+dependencies = [
+ "idna",
+ "once_cell",
+ "regex",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "url",
  "validator_derive",
 ]
 
 [[package]]
 name = "validator_derive"
-version = "0.19.0"
+version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bac855a2ce6f843beb229757e6e570a42e837bcb15e5f449dd48d5747d41bf77"
+checksum = "b7df16e474ef958526d1205f6dda359fdfab79d9aa6d54bafcb92dcd07673dca"
 dependencies = [
  "darling",
  "once_cell",

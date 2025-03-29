@@ -10,7 +10,7 @@ default-run = "mpdb"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace.dependencies]
-loco-rs = { version = "0.14.0" }
+loco-rs = { version = "0.15.0" }
 
 [dependencies]
 mpdblib = { git = "http://git.darkstar.local/rolf/mpdblib.git" }
