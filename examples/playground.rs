@@ -1,6 +1,9 @@
 #[allow(unused_imports)]
 use loco_rs::{cli::playground, prelude::*};
-use mpdb::{app::App, models::_entities::countries};
+use mpdb::{
+    app::App,
+    models::_entities::{cities, countries, venues},
+};
 // use sha1::{Digest, Sha1};
 
 #[tokio::main]
@@ -38,8 +41,14 @@ async fn main() -> loco_rs::Result<()> {
 
     //println!("result: {}", uuid);
 
-    let res = countries::Entity::find().all(&ctx.db).await.unwrap();
-    println!("{:?}", res);
+    let res = venues::Entity::find()
+        .find_also_related(cities::Entity)
+        .and_also_related(countries::Entity)
+        .all(&ctx.db)
+        .await
+        .unwrap();
+
+    println!("{}", serde_json::to_string_pretty(&res).unwrap());
 
     Ok(())
 }
