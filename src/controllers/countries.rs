@@ -95,11 +95,7 @@ pub async fn get_one_country_by_slug(
     Path(slug): Path<String>,
     State(ctx): State<AppContext>,
 ) -> Result<Response> {
-    let item = Entity::find()
-        .filter(crate::models::_entities::countries::Column::Slug.eq(slug))
-        .one(&ctx.db)
-        .await?
-        .unwrap();
+    let item = Model::find_by_slug(&ctx.db, &slug).await?;
     format::json(load_item(&ctx, item.id).await?)
 }
 
