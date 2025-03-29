@@ -59,6 +59,7 @@ impl Hooks for App {
             .add_route(controllers::concerts::routes())
             .add_route(controllers::artists::routes())
             .add_route(controllers::venues::routes())
+            .add_route(controllers::venues::api_by_slug_routes())
             .add_route(controllers::cities::api_routes())
             .add_route(controllers::countries::api_routes())
             .add_route(controllers::countries::api_by_slug_routes())

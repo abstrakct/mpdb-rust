@@ -5,6 +5,7 @@ use axum::debug_handler;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use super::cities::CityResponse;
 use crate::models::_entities::venues::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -13,6 +14,14 @@ pub struct Params {
     pub city_id: i32,
     pub unique_name: String,
     pub slug: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct VenueResponse {
+    pub id: i32,
+    pub name: String,
+    pub slug: String,
+    pub city: CityResponse,
 }
 
 impl Params {
@@ -68,6 +77,46 @@ pub async fn get_one(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Resu
     format::json(load_item(&ctx, id).await?)
 }
 
+pub async fn load_by_slug(ctx: &AppContext, slug: String) -> Result<VenueResponse> {
+    use crate::models::_entities::{cities, countries};
+    let venue = Entity::find()
+        .filter(crate::models::_entities::venues::Column::Slug.eq(slug))
+        .one(&ctx.db)
+        .await?
+        .unwrap();
+
+    let city = cities::Entity::find_by_id(venue.city_id)
+        .one(&ctx.db)
+        .await?
+        .unwrap();
+
+    let country = countries::Entity::find_by_id(city.country_id)
+        .one(&ctx.db)
+        .await?
+        .unwrap();
+
+    Ok(VenueResponse {
+        id: venue.id,
+        name: venue.name,
+        slug: venue.slug,
+        city: CityResponse {
+            id: city.id,
+            name: city.name,
+            slug: city.slug,
+            country: country.into(),
+        },
+    })
+}
+
+#[debug_handler]
+pub async fn get_one_by_slug(
+    Path(slug): Path<String>,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let result = load_by_slug(&ctx, slug).await?;
+    format::json(result)
+}
+
 pub fn routes() -> Routes {
     Routes::new()
         .prefix("api/venues/")
@@ -77,4 +126,10 @@ pub fn routes() -> Routes {
         .add("{id}", delete(remove))
         .add("{id}", put(update))
         .add("{id}", patch(update))
+}
+
+pub fn api_by_slug_routes() -> Routes {
+    Routes::new()
+        .prefix("api/venues/by-slug/")
+        .add("/{slug}", get(get_one_by_slug))
 }
