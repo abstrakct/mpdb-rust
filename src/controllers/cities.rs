@@ -20,7 +20,7 @@ pub struct Params {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-struct CityResponse {
+pub struct CityResponse {
     pub id: i32,
     pub name: String,
     pub slug: String,
@@ -40,6 +40,7 @@ async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
     item.ok_or_else(|| Error::NotFound)
 }
 
+#[allow(dead_code)]
 async fn load_item_with_country(
     ctx: &AppContext,
     id: i32,

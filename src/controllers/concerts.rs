@@ -6,6 +6,7 @@ use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 use tracing::log::debug;
 
+use super::venues::VenueResponse;
 use crate::models::_entities::concerts::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -32,6 +33,18 @@ impl Params {
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ConcertResponse {
+    pub id: i32,
+    pub date: Date,
+    pub disambiguation: Option<String>,
+    pub source: Option<String>,
+    pub sort_order: Option<i32>,
+    pub venue: VenueResponse,
+    pub artist_id: i32,
+    pub slug: String,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct InputData {
     pub status: String,
 }
@@ -43,7 +56,31 @@ async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
 
 #[debug_handler]
 pub async fn list(State(ctx): State<AppContext>) -> Result<Response> {
-    format::json(Entity::find().all(&ctx.db).await?)
+    use crate::models::_entities::venues;
+
+    let items = Entity::find()
+        .find_also_related(venues::Entity)
+        .all(&ctx.db)
+        .await?;
+
+    let mut result = Vec::new();
+    for (concert, venue) in items {
+        let venue = super::venues::load_by_slug(&ctx, venue.clone().unwrap().slug.clone()).await;
+
+        result.push(ConcertResponse {
+            id: concert.id,
+            date: concert.date,
+            disambiguation: concert.disambiguation,
+            source: concert.source,
+            sort_order: concert.sort_order,
+            venue: venue.unwrap(),
+            artist_id: concert.artist_id,
+            slug: concert.slug,
+        });
+    }
+
+    format::json(result)
+    // format::json(Entity::find().all(&ctx.db).await?)
 }
 
 #[debug_handler]
