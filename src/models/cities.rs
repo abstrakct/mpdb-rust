@@ -1,4 +1,5 @@
-pub use super::_entities::cities::{ActiveModel, Entity, Model};
+pub use super::_entities::cities::{self, ActiveModel, Entity, Model};
+use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Cities = Entity;
 
@@ -19,7 +20,41 @@ impl ActiveModelBehavior for ActiveModel {
 }
 
 // implement your read-oriented logic here
-impl Model {}
+impl Model {
+    /// Finds a city by the provided name
+    ///
+    /// # Errors
+    ///
+    /// When could not find city by the given name or DB query error
+    pub async fn find_by_name(db: &DatabaseConnection, name: &str) -> ModelResult<Self> {
+        let city = Cities::find()
+            .filter(
+                model::query::condition()
+                    .eq(cities::Column::Name, name)
+                    .build(),
+            )
+            .one(db)
+            .await?;
+        city.ok_or_else(|| ModelError::EntityNotFound)
+    }
+
+    /// Finds a city by the provided slug
+    ///
+    /// # Errors
+    ///
+    /// When could not find city by the given slug or DB query error
+    pub async fn find_by_slug(db: &DatabaseConnection, slug: &str) -> ModelResult<Self> {
+        let city = Cities::find()
+            .filter(
+                model::query::condition()
+                    .eq(cities::Column::Slug, slug)
+                    .build(),
+            )
+            .one(db)
+            .await?;
+        city.ok_or_else(|| ModelError::EntityNotFound)
+    }
+}
 
 // implement your write-oriented logic here
 impl ActiveModel {}
