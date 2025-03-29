@@ -2589,7 +2589,7 @@ dependencies = [
  "tracing-subscriber",
  "ulid",
  "uuid",
- "validator 0.20.0",
+ "validator",
 ]
 
 [[package]]
@@ -2770,7 +2770,7 @@ dependencies = [
  "tracing-subscriber",
  "unic-langid",
  "uuid",
- "validator 0.19.0",
+ "validator",
 ]
 
 [[package]]
@@ -5604,21 +5604,6 @@ dependencies = [
  "rand 0.9.0",
  "serde",
  "sha1_smol",
-]
-
-[[package]]
-name = "validator"
-version = "0.19.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d0b4a29d8709210980a09379f27ee31549b73292c87ab9899beee1c0d3be6303"
-dependencies = [
- "idna",
- "once_cell",
- "regex",
- "serde",
- "serde_derive",
- "serde_json",
- "url",
 ]
 
 [[package]]
