@@ -77,8 +77,8 @@ pub async fn list(State(ctx): State<AppContext>) -> Result<Response> {
 
     let ctx = &ctx;
     let items = Entity::find()
-        .find_also_related(venues::Entity)
-        .and_also_related(cities::Entity)
+        // .find_also_related(venues::Entity)
+        // .and_also_related(cities::Entity)
         .all(&ctx.db)
         .await?;
 
