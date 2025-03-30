@@ -11,6 +11,7 @@ impl MigrationTrait for Migration {
             m,
             "sets",
             &[
+                ("id", ColType::PkAuto),
                 ("name", ColType::StringNull),
                 ("unique_name", ColType::StringUniq),
             ],

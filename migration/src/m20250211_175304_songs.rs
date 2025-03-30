@@ -10,7 +10,7 @@ impl MigrationTrait for Migration {
         create_table(
             m,
             "songs",
-            &[("notes", ColType::TextNull)],
+            &[("id", ColType::PkAuto), ("notes", ColType::TextNull)],
             &[("artist", "")],
         )
         .await

@@ -10,7 +10,7 @@ impl MigrationTrait for Migration {
         create_table(
             m,
             "cities",
-            &[("name", ColType::String)],
+            &[("id", ColType::PkAuto), ("name", ColType::String)],
             &[("country", "")],
         )
         .await

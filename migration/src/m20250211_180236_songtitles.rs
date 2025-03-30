@@ -10,7 +10,11 @@ impl MigrationTrait for Migration {
         create_table(
             m,
             "songtitles",
-            &[("title", ColType::String), ("is_default", ColType::Boolean)],
+            &[
+                ("id", ColType::PkAuto),
+                ("title", ColType::String),
+                ("is_default", ColType::Boolean),
+            ],
             &[("song", "")],
         )
         .await

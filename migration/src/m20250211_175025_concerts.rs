@@ -11,6 +11,7 @@ impl MigrationTrait for Migration {
             m,
             "concerts",
             &[
+                ("id", ColType::PkAuto),
                 ("date", ColType::Date),
                 ("disambiguation", ColType::StringNull),
                 ("sort_order", ColType::IntegerNull),
