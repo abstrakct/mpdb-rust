@@ -56,6 +56,26 @@ impl Model {
             .await?;
         city.ok_or_else(|| ModelError::EntityNotFound)
     }
+
+    /// Gets the country associated with this city
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// The country model for this city
+    ///
+    /// # Errors
+    ///
+    /// When could not find the associated country or DB query error
+    pub async fn country(&self, db: &DatabaseConnection) -> ModelResult<countries::Model> {
+        countries::Entity::find_by_id(self.country_id)
+            .one(db)
+            .await?
+            .ok_or_else(|| ModelError::EntityNotFound)
+    }
 }
 
 impl ActiveModel {

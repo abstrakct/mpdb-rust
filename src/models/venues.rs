@@ -1,5 +1,5 @@
 pub use super::_entities::venues::{self, ActiveModel, Entity, Model};
-use super::_entities::{cities, concerts};
+use super::_entities::{cities, concerts, countries};
 use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 use sea_orm::{QuerySelect, QueryTrait};
@@ -130,6 +130,44 @@ impl Model {
             .filter(venues::Column::Name.contains(pattern))
             .all(db)
             .await
+    }
+
+    /// Gets the city associated with this venue
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// The city model for this venue
+    ///
+    /// # Errors
+    ///
+    /// When could not find the associated city or DB query error
+    pub async fn city(&self, db: &DatabaseConnection) -> ModelResult<cities::Model> {
+        cities::Entity::find_by_id(self.city_id)
+            .one(db)
+            .await?
+            .ok_or_else(|| ModelError::EntityNotFound)
+    }
+
+    /// Gets the country associated with this venue
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// The country model for this venue
+    ///
+    /// # Errors
+    ///
+    /// When could not find the associated country or DB query error
+    pub async fn country(&self, db: &DatabaseConnection) -> ModelResult<countries::Model> {
+        let city = self.city(db).await?;
+        city.country(db).await
     }
 }
 
