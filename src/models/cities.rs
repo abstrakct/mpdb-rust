@@ -1,4 +1,6 @@
 pub use super::_entities::cities::{self, ActiveModel, Entity, Model};
+use super::_entities::countries;
+use super::_entities::venues;
 use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Cities = Entity;
@@ -56,8 +58,100 @@ impl Model {
     }
 }
 
-// implement your write-oriented logic here
-impl ActiveModel {}
+impl ActiveModel {
+    // implement your write-oriented logic here
+}
 
-// implement your custom finders, selectors oriented logic here
-impl Entity {}
+impl Entity {
+    /// Find all cities in a country
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    /// * `country_id` - ID of the country to find cities for
+    ///
+    /// # Returns
+    ///
+    /// Vector of cities in the country
+    pub async fn find_all_by_country_id(
+        db: &DatabaseConnection,
+        country_id: i32,
+    ) -> Result<Vec<Model>, DbErr> {
+        Self::find()
+            .filter(cities::Column::CountryId.eq(country_id))
+            .all(db)
+            .await
+    }
+
+    /// Find all cities with their related country information
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// Vector of tuples containing (city, country)
+    pub async fn find_all_with_countries(
+        db: &DatabaseConnection,
+    ) -> Result<Vec<(Model, Option<countries::Model>)>, DbErr> {
+        Self::find()
+            .find_also_related(countries::Entity)
+            .all(db)
+            .await
+    }
+
+    /// Find all cities with their related venues
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// Vector of tuples containing (city, venue)
+    pub async fn find_all_with_venues(
+        db: &DatabaseConnection,
+    ) -> Result<Vec<(Model, Option<venues::Model>)>, DbErr> {
+        Self::find().find_also_related(venues::Entity).all(db).await
+    }
+
+    /// Find all cities with their related country and venues
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// Vector of tuples containing (city, country, venue)
+    pub async fn find_all_with_countries_and_venues(
+        db: &DatabaseConnection,
+    ) -> Result<Vec<(Model, Option<countries::Model>, Option<venues::Model>)>, DbErr> {
+        Self::find()
+            .find_also_related(countries::Entity)
+            .find_also_related(venues::Entity)
+            .all(db)
+            .await
+    }
+
+    /// Find cities by name pattern (case-insensitive partial match)
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    /// * `pattern` - Pattern to match against city names
+    ///
+    /// # Returns
+    ///
+    /// Vector of matching cities
+    pub async fn find_all_by_name_pattern(
+        db: &DatabaseConnection,
+        pattern: &str,
+    ) -> Result<Vec<Model>, DbErr> {
+        Self::find()
+            .filter(cities::Column::Name.contains(pattern))
+            .all(db)
+            .await
+    }
+}
