@@ -76,6 +76,26 @@ impl Model {
             .await?
             .ok_or_else(|| ModelError::EntityNotFound)
     }
+
+    /// Gets all venues in this city
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// Vector of venues in this city
+    ///
+    /// # Errors
+    ///
+    /// When there is a DB query error
+    pub async fn venues(&self, db: &DatabaseConnection) -> Result<Vec<venues::Model>, DbErr> {
+        venues::Entity::find()
+            .filter(venues::Column::CityId.eq(self.id))
+            .all(db)
+            .await
+    }
 }
 
 impl ActiveModel {

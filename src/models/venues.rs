@@ -169,6 +169,26 @@ impl Model {
         let city = self.city(db).await?;
         city.country(db).await
     }
+
+    /// Gets all concerts at this venue
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    ///
+    /// # Returns
+    ///
+    /// Vector of concerts at this venue
+    ///
+    /// # Errors
+    ///
+    /// When there is a DB query error
+    pub async fn concerts(&self, db: &DatabaseConnection) -> Result<Vec<concerts::Model>, DbErr> {
+        concerts::Entity::find()
+            .filter(concerts::Column::VenueId.eq(self.id))
+            .all(db)
+            .await
+    }
 }
 
 // implement your write-oriented logic here
