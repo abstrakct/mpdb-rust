@@ -1,7 +1,7 @@
-use std::str::FromStr;
-
 #[allow(unused_imports)]
 use loco_rs::{cli::playground, prelude::*};
+
+#[allow(unused_imports)]
 use mpdb::{
     app::App,
     models::_entities::{cities, countries, venues},
@@ -53,19 +53,39 @@ async fn main() -> loco_rs::Result<()> {
     // let res = cities::Entity::find_by_country_id(&ctx.db, 1).await;
     // let res = cities::Entity::find_with_countries(&ctx.db).await;
     // let res = venues::Entity::find_by_city_slug(&ctx.db, "trondheim-norway").await;
-    let res = venues::Entity::find_all_with_concerts_in_date_range(
-        &ctx.db,
-        Date::from_str("2025-01-01").expect("wrong start date"),
-        Date::from_str("2025-03-30").expect("wrong end date"),
-    )
-    .await;
+    // let res = venues::Entity::find_all_with_concerts_in_date_range(
+    //     &ctx.db,
+    //     Date::from_str("2025-01-01").expect("wrong start date"),
+    //     Date::from_str("2025-03-30").expect("wrong end date"),
+    // )
+    // .await;
 
-    let res = countries::Entity::find_all_venues(&ctx.db, 12).await;
+    // let res = countries::Entity::find_all_venues(&ctx.db, 12).await;
 
-    match res {
+    let res = venues::Model::find_by_name(&ctx.db, "UFFA").await;
+    match res.as_ref() {
         Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
         Err(e) => println!("ERROR: {}", e),
     }
+
+    let res2 = res
+        .as_ref()
+        .unwrap()
+        .city(&ctx.db)
+        .await
+        .unwrap()
+        .venues(&ctx.db)
+        .await;
+    match res2 {
+        Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
+        Err(e) => println!("ERROR: {}", e),
+    }
+
+    // let res3 = res.unwrap().concerts(&ctx.db).await;
+    // match res3 {
+    //     Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
+    //     Err(e) => println!("ERROR: {}", e),
+    // }
 
     Ok(())
 }
