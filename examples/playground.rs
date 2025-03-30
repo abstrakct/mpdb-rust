@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 #[allow(unused_imports)]
 use loco_rs::{cli::playground, prelude::*};
 use mpdb::{
@@ -41,14 +43,29 @@ async fn main() -> loco_rs::Result<()> {
 
     //println!("result: {}", uuid);
 
-    let res = venues::Entity::find()
-        .find_also_related(cities::Entity)
-        .and_also_related(countries::Entity)
-        .all(&ctx.db)
-        .await
-        .unwrap();
+    // let res = venues::Entity::find()
+    //     .find_also_related(cities::Entity)
+    //     .and_also_related(countries::Entity)
+    //     .all(&ctx.db)
+    //     .await
+    //     .unwrap();
 
-    println!("{}", serde_json::to_string_pretty(&res).unwrap());
+    // let res = cities::Entity::find_by_country_id(&ctx.db, 1).await;
+    // let res = cities::Entity::find_with_countries(&ctx.db).await;
+    // let res = venues::Entity::find_by_city_slug(&ctx.db, "trondheim-norway").await;
+    let res = venues::Entity::find_all_with_concerts_in_date_range(
+        &ctx.db,
+        Date::from_str("2025-01-01").expect("wrong start date"),
+        Date::from_str("2025-03-30").expect("wrong end date"),
+    )
+    .await;
+
+    let res = countries::Entity::find_all_venues(&ctx.db, 12).await;
+
+    match res {
+        Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
+        Err(e) => println!("ERROR: {}", e),
+    }
 
     Ok(())
 }
