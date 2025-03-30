@@ -1,4 +1,6 @@
+use super::_entities::cities;
 pub use super::_entities::countries::{self, ActiveModel, Entity, Model};
+use super::_entities::venues;
 use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Countries = Entity;
@@ -60,4 +62,73 @@ impl Model {
 impl ActiveModel {}
 
 // implement your custom finders, selectors oriented logic here
-impl Entity {}
+impl Entity {
+    /// Find all cities in a country
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    /// * `country_id` - ID of the country to find cities for
+    ///
+    /// # Returns
+    ///
+    /// Vector of cities in the country
+    pub async fn find_all_cities(
+        db: &DatabaseConnection,
+        country_id: i32,
+    ) -> Result<Vec<cities::Model>, DbErr> {
+        cities::Entity::find()
+            .filter(cities::Column::CountryId.eq(country_id))
+            .all(db)
+            .await
+    }
+
+    /// Find all venues in a country
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    /// * `country_id` - ID of the country to find venues for
+    ///
+    /// # Returns
+    ///
+    /// Vector of venues in the country
+    pub async fn find_all_venues(
+        db: &DatabaseConnection,
+        country_id: i32,
+    ) -> Result<Vec<venues::Model>, DbErr> {
+        let city_ids = cities::Entity::find()
+            .filter(cities::Column::CountryId.eq(country_id))
+            .all(db)
+            .await?
+            .into_iter()
+            .map(|city| city.id)
+            .collect::<Vec<i32>>();
+
+        venues::Entity::find()
+            .filter(venues::Column::CityId.is_in(city_ids))
+            .all(db)
+            .await
+    }
+
+    /// Find all cities in a country with their related information
+    ///
+    /// # Arguments
+    ///
+    /// * `db` - Database connection
+    /// * `country_id` - ID of the country to find cities for
+    ///
+    /// # Returns
+    ///
+    /// Vector of cities with their related information
+    pub async fn find_all_cities_with_venues(
+        db: &DatabaseConnection,
+        country_id: i32,
+    ) -> Result<Vec<(cities::Model, Vec<super::_entities::venues::Model>)>, DbErr> {
+        cities::Entity::find()
+            .filter(cities::Column::CountryId.eq(country_id))
+            .find_with_related(super::_entities::venues::Entity)
+            .all(db)
+            .await
+    }
+}
