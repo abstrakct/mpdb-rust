@@ -24,6 +24,17 @@ pub struct VenueResponse {
     pub city: CityResponse,
 }
 
+impl From<(Model, CityResponse)> for VenueResponse {
+    fn from((venue, city): (Model, CityResponse)) -> Self {
+        Self {
+            id: venue.id,
+            name: venue.name,
+            slug: venue.slug,
+            city,
+        }
+    }
+}
+
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
         item.name = Set(self.name.clone());
