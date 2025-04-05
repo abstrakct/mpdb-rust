@@ -7,12 +7,8 @@ use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 use tracing::log::debug;
 
-use super::venues::VenueResponse;
-use crate::models::_entities::{
-    cities,
-    concerts::{ActiveModel, Entity, Model},
-    venues,
-};
+use super::{cities::CityResponse, countries::CountryResponse, venues::VenueResponse};
+use crate::models::_entities::concerts::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
@@ -45,6 +41,8 @@ pub struct ConcertResponse {
     pub source: Option<String>,
     pub sort_order: Option<i32>,
     pub venue: VenueResponse,
+    pub city: CityResponse,
+    pub country: CountryResponse,
     pub artist_id: i32,
     pub slug: String,
 }
@@ -61,50 +59,45 @@ async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
 
 #[debug_handler]
 pub async fn list(State(ctx): State<AppContext>) -> Result<Response> {
-    // use futures::future::try_join_all;
-    // let sql = Statement {
-    //     sql: "select c.id, c.date, c.slug, v.name as venue_name, cit.name as city_name, co.name as country_name
-    //             from concerts c
-    //             left join venues v on c.venue_id = v.id
-    //             left join cities cit on v.city_id = cit.id
-    //             left join countries co on cit.country_id = co.id
-    //             ".to_string(),
-    //     values: None,
-    //     db_backend: ctx.db.get_database_backend(),
-    // };
-
-    // let query_result = ctx.db.query_all(sql).await?;
-
     let ctx = &ctx;
-    let items = Entity::find()
-        // .find_also_related(venues::Entity)
-        // .and_also_related(cities::Entity)
-        .all(&ctx.db)
-        .await?;
-
-    // let result = try_join_all(
-    //     items
-    //         .into_iter()
-    //         .map(async move |(concert, venue)| {
-    //             let venue = super::venues::load_by_slug(ctx, venue.unwrap().slug.clone()).await?;
-
-    //             Ok::<_, Error>(ConcertResponse {
-    //                 id: concert.id,
-    //                 date: concert.date,
-    //                 disambiguation: concert.disambiguation,
-    //                 source: concert.source,
-    //                 sort_order: concert.sort_order,
-    //                 venue,
-    //                 artist_id: concert.artist_id,
-    //                 slug: concert.slug,
-    //             })
-    //         })
-    //         .collect::<Vec<_>>(),
-    // )
-    // .await?;
+    let items = Entity::find().all(&ctx.db).await?;
 
     format::json(items)
-    // format::json(Entity::find().all(&ctx.db).await?)
+}
+
+#[debug_handler]
+pub async fn list_with_details(State(ctx): State<AppContext>) -> Result<Response> {
+    let ctx = &ctx;
+    let items = Model::find_all_with_venue_and_artist(&ctx.db).await?;
+
+    let mut responses = Vec::new();
+    for (concert, venue_opt, artist_opt) in items {
+        // Get venue, city and country data
+        if let Some(venue) = venue_opt {
+            let city = venue.city(&ctx.db).await?;
+            let country = city.country(&ctx.db).await?;
+
+            // Convert models to responses
+            let country_response = CountryResponse::from(country);
+            let city_response = CityResponse::from((city, country_response.clone()));
+            let venue_response = VenueResponse::from((venue, city_response.clone()));
+
+            responses.push(ConcertResponse {
+                id: concert.id,
+                date: concert.date,
+                disambiguation: concert.disambiguation,
+                source: concert.source,
+                sort_order: concert.sort_order,
+                venue: venue_response,
+                city: city_response,
+                country: country_response,
+                artist_id: concert.artist_id,
+                slug: concert.slug,
+            });
+        }
+    }
+
+    format::json(responses)
 }
 
 #[debug_handler]
@@ -160,6 +153,7 @@ pub fn routes() -> Routes {
     Routes::new()
         .prefix("api/concerts/")
         .add("/", get(list))
+        .add("/with-details", get(list_with_details))
         .add("/", post(add))
         .add("/new", post(add_new))
         .add("{id}", get(get_one))
