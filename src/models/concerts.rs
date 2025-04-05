@@ -1,4 +1,5 @@
-pub use super::_entities::concerts::{ActiveModel, Entity, Model};
+pub use super::_entities::concerts::{self, ActiveModel, Entity, Model};
+use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Concerts = Entity;
 
@@ -20,6 +21,23 @@ impl ActiveModelBehavior for ActiveModel {
 
 // implement your read-oriented logic here
 impl Model {
+    /// Finds a concert by the provided slug
+    ///
+    /// # Errors
+    ///
+    /// When could not find concert by the given slug or DB query error
+    pub async fn find_by_slug(db: &DatabaseConnection, slug: &str) -> ModelResult<Self> {
+        let concert = Concerts::find()
+            .filter(
+                model::query::condition()
+                    .eq(concerts::Column::Slug, slug)
+                    .build(),
+            )
+            .one(db)
+            .await?;
+        concert.ok_or_else(|| ModelError::EntityNotFound)
+    }
+
     /// Find all concerts with their associated venue and artist information
     ///
     /// # Returns
