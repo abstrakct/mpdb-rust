@@ -1,6 +1,7 @@
 #[allow(unused_imports)]
 use loco_rs::{cli::playground, prelude::*};
 
+use mpdb::models::{_entities::sets, concerts};
 #[allow(unused_imports)]
 use mpdb::{
     app::App,
@@ -86,6 +87,16 @@ async fn main() -> loco_rs::Result<()> {
     //     Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
     //     Err(e) => println!("ERROR: {}", e),
     // }
+
+    let set = sets::Entity::find_by_id(3152).one(&ctx.db).await?;
+    let res = set.as_ref().unwrap().songs(&ctx.db).await;
+    match res {
+        Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
+        Err(e) => println!("ERROR: {}", e),
+    }
+
+    let concerts = concerts::Model::find_all_with_venue_and_artist(&ctx.db).await?;
+    println!("{}", serde_json::to_string_pretty(&concerts[0]).unwrap());
 
     Ok(())
 }
