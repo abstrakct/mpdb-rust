@@ -41,8 +41,6 @@ pub struct ConcertResponse {
     pub source: Option<String>,
     pub sort_order: Option<i32>,
     pub venue: VenueResponse,
-    pub city: CityResponse,
-    pub country: CountryResponse,
     pub artist_id: i32,
     pub slug: String,
 }
@@ -71,7 +69,7 @@ pub async fn list_with_details(State(ctx): State<AppContext>) -> Result<Response
     let items = Model::find_all_with_venue_and_artist(&ctx.db).await?;
 
     let mut responses = Vec::new();
-    for (concert, venue_opt, artist_opt) in items {
+    for (concert, venue_opt, _artist_opt) in items {
         // Get venue, city and country data
         if let Some(venue) = venue_opt {
             let city = venue.city(&ctx.db).await?;
@@ -89,8 +87,6 @@ pub async fn list_with_details(State(ctx): State<AppContext>) -> Result<Response
                 source: concert.source,
                 sort_order: concert.sort_order,
                 venue: venue_response,
-                city: city_response,
-                country: country_response,
                 artist_id: concert.artist_id,
                 slug: concert.slug,
             });
