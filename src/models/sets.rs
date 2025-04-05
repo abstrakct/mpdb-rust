@@ -19,7 +19,29 @@ impl ActiveModelBehavior for ActiveModel {
 }
 
 // implement your read-oriented logic here
-impl Model {}
+impl Model {
+    pub async fn performances(
+        &self,
+        db: &DatabaseConnection,
+    ) -> Result<Vec<super::performances::Model>, DbErr> {
+        self.find_related(super::performances::Entity).all(db).await
+    }
+
+    pub async fn songs(&self, db: &DatabaseConnection) -> Result<Vec<super::songs::Model>, DbErr> {
+        let performances = self.performances(db).await?;
+        let mut songs = Vec::new();
+        for performance in performances {
+            if let Some(song) = performance
+                .find_related(super::songs::Entity)
+                .one(db)
+                .await?
+            {
+                songs.push(song);
+            }
+        }
+        Ok(songs)
+    }
+}
 
 // implement your write-oriented logic here
 impl ActiveModel {}
