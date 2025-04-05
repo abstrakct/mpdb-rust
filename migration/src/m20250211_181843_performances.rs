@@ -10,7 +10,11 @@ impl MigrationTrait for Migration {
         create_table(
             m,
             "performances",
-            &[("id", ColType::PkAuto), ("segue", ColType::Boolean)],
+            &[
+                ("id", ColType::PkAuto),
+                ("segue", ColType::Boolean),
+                ("sort_order", ColType::Integer),
+            ],
             &[
                 ("sets", ""),
                 ("concerts", ""),
