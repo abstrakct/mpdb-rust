@@ -19,7 +19,14 @@ impl ActiveModelBehavior for ActiveModel {
 }
 
 // implement your read-oriented logic here
-impl Model {}
+impl Model {
+    pub async fn titles(
+        &self,
+        db: &DatabaseConnection,
+    ) -> Result<Vec<super::songtitles::Model>, DbErr> {
+        self.find_related(super::songtitles::Entity).all(db).await
+    }
+}
 
 // implement your write-oriented logic here
 impl ActiveModel {}
