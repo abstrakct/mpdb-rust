@@ -145,7 +145,38 @@ pub async fn get_one(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Resu
     format::json(load_item(&ctx, id).await?)
 }
 
-pub fn routes() -> Routes {
+#[debug_handler]
+pub async fn get_one_by_slug(
+    Path(slug): Path<String>,
+    State(ctx): State<AppContext>,
+) -> Result<Response> {
+    let concert = Model::find_by_slug(&ctx.db, &slug).await?;
+    let venue = crate::models::venues::Entity::find_by_id(concert.venue_id)
+        .one(&ctx.db)
+        .await?;
+    let city = venue.clone().unwrap().city(&ctx.db).await?;
+    let country = city.country(&ctx.db).await?;
+
+    // Convert models to responses
+    let country_response = CountryResponse::from(country);
+    let city_response = CityResponse::from((city, country_response.clone()));
+    let venue_response = VenueResponse::from((venue.unwrap(), city_response.clone()));
+
+    let response = ConcertResponse {
+        id: concert.id,
+        date: concert.date,
+        disambiguation: concert.disambiguation,
+        source: concert.source,
+        sort_order: concert.sort_order,
+        venue: venue_response,
+        artist_id: concert.artist_id,
+        slug: concert.slug,
+    };
+
+    format::json(response)
+}
+
+pub fn api_routes() -> Routes {
     Routes::new()
         .prefix("api/concerts/")
         .add("/", get(list))
@@ -156,4 +187,10 @@ pub fn routes() -> Routes {
         .add("{id}", delete(remove))
         .add("{id}", put(update))
         .add("{id}", patch(update))
+}
+
+pub fn api_by_slug_routes() -> Routes {
+    Routes::new()
+        .prefix("api/concerts/by-slug/")
+        .add("{slug}", get(get_one_by_slug))
 }
