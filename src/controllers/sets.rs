@@ -12,6 +12,7 @@ pub struct Params {
     pub name: Option<String>,
     pub unique_name: String,
     pub concert_id: i32,
+    pub sort_order: i32,
 }
 
 impl Params {
@@ -19,6 +20,7 @@ impl Params {
         item.name = Set(self.name.clone());
         item.unique_name = Set(self.unique_name.clone());
         item.concert_id = Set(self.concert_id);
+        item.sort_order = Set(self.sort_order);
     }
 }
 

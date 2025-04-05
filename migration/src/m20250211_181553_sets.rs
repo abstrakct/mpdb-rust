@@ -14,6 +14,7 @@ impl MigrationTrait for Migration {
                 ("id", ColType::PkAuto),
                 ("name", ColType::StringNull),
                 ("unique_name", ColType::StringUniq),
+                ("sort_order", ColType::Integer),
             ],
             &[("concerts", "")],
         )
