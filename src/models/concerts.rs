@@ -1,7 +1,7 @@
 pub use super::_entities::concerts::{self, ActiveModel, Entity, Model};
 use super::_entities::sets;
 use loco_rs::prelude::*;
-use sea_orm::entity::prelude::*;
+use sea_orm::{entity::prelude::*, QueryOrder};
 pub type Concerts = Entity;
 
 #[async_trait::async_trait]
@@ -62,6 +62,7 @@ impl Model {
 
     pub async fn sets(&self, db: &DatabaseConnection) -> Result<Vec<sets::Model>, DbErr> {
         sets::Entity::find()
+            .order_by(sets::Column::SortOrder, sea_orm::Order::Asc)
             .filter(sets::Column::ConcertId.eq(self.id))
             .all(db)
             .await
