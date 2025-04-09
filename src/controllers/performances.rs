@@ -34,7 +34,7 @@ impl Params {
 pub struct PerformanceResponse {
     pub id: i32,
     pub sort_order: i32,
-    pub performance_title: String,
+    pub performance_title: Option<String>,
     pub songtitle: String,
 }
 
@@ -43,7 +43,7 @@ impl From<Model> for PerformanceResponse {
         Self {
             id: item.id,
             sort_order: item.sort_order,
-            performance_title: "".into(),
+            performance_title: None,
             songtitle: "".into(),
         }
     }

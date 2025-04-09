@@ -174,7 +174,11 @@ pub async fn get_one_by_slug(
             perf_responses.push(PerformanceResponse {
                 id: p.id,
                 sort_order: p.sort_order,
-                performance_title: perftitle.unwrap(),
+                performance_title: if perftitle.as_deref() != songtitle.as_deref() {
+                    Some(perftitle.unwrap())
+                } else {
+                    None
+                },
                 songtitle: songtitle.unwrap(),
             });
         }

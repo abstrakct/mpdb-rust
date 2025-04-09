@@ -1,5 +1,5 @@
 pub use super::_entities::concerts::{self, ActiveModel, Entity, Model};
-use super::_entities::{performances, sets};
+use super::_entities::sets;
 use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Concerts = Entity;
