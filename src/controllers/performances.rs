@@ -30,6 +30,25 @@ impl Params {
     }
 }
 
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct PerformanceResponse {
+    pub id: i32,
+    pub sort_order: i32,
+    pub performance_title: String,
+    pub songtitle: String,
+}
+
+impl From<Model> for PerformanceResponse {
+    fn from(item: Model) -> Self {
+        Self {
+            id: item.id,
+            sort_order: item.sort_order,
+            performance_title: "".into(),
+            songtitle: "".into(),
+        }
+    }
+}
+
 async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
     let item = Entity::find_by_id(id).one(&ctx.db).await?;
     item.ok_or_else(|| Error::NotFound)

@@ -1,4 +1,5 @@
-pub use super::_entities::songtitles::{ActiveModel, Entity, Model};
+pub use super::_entities::songtitles::{self, ActiveModel, Entity, Model};
+use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Songtitles = Entity;
 
@@ -19,7 +20,24 @@ impl ActiveModelBehavior for ActiveModel {
 }
 
 // implement your read-oriented logic here
-impl Model {}
+impl Model {
+    /// Finds a songtitle by the provided slug
+    ///
+    /// # Errors
+    ///
+    /// When could not find concert by the given slug or DB query error
+    pub async fn find_by_slug(db: &DatabaseConnection, slug: &str) -> ModelResult<Self> {
+        let title = Songtitles::find()
+            .filter(
+                model::query::condition()
+                    .eq(songtitles::Column::Slug, slug)
+                    .build(),
+            )
+            .one(db)
+            .await?;
+        title.ok_or_else(|| ModelError::EntityNotFound)
+    }
+}
 
 // implement your write-oriented logic here
 impl ActiveModel {}

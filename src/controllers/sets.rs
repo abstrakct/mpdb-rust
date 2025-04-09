@@ -5,6 +5,7 @@ use axum::debug_handler;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 
+use super::performances::PerformanceResponse;
 use crate::models::_entities::sets::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -21,6 +22,39 @@ impl Params {
         item.unique_name = Set(self.unique_name.clone());
         item.concert_id = Set(self.concert_id);
         item.sort_order = Set(self.sort_order);
+    }
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct SetResponse {
+    pub id: i32,
+    pub name: Option<String>,
+    pub unique_name: String,
+    pub sort_order: i32,
+    pub performances: Option<Vec<PerformanceResponse>>,
+}
+
+impl From<Model> for SetResponse {
+    fn from(item: Model) -> Self {
+        Self {
+            id: item.id,
+            name: item.name,
+            unique_name: item.unique_name,
+            sort_order: item.sort_order,
+            performances: None,
+        }
+    }
+}
+
+impl From<(Model, Vec<PerformanceResponse>)> for SetResponse {
+    fn from((item, performances): (Model, Vec<PerformanceResponse>)) -> Self {
+        Self {
+            id: item.id,
+            name: item.name,
+            unique_name: item.unique_name,
+            sort_order: item.sort_order,
+            performances: Some(performances),
+        }
     }
 }
 

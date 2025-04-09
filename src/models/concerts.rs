@@ -1,4 +1,5 @@
 pub use super::_entities::concerts::{self, ActiveModel, Entity, Model};
+use super::_entities::{performances, sets};
 use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Concerts = Entity;
@@ -55,6 +56,13 @@ impl Model {
         Entity::find()
             .find_also_related(super::_entities::venues::Entity)
             .find_also_related(super::_entities::artists::Entity)
+            .all(db)
+            .await
+    }
+
+    pub async fn sets(&self, db: &DatabaseConnection) -> Result<Vec<sets::Model>, DbErr> {
+        sets::Entity::find()
+            .filter(sets::Column::ConcertId.eq(self.id))
             .all(db)
             .await
     }

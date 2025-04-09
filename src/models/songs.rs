@@ -1,4 +1,5 @@
 pub use super::_entities::songs::{ActiveModel, Entity, Model};
+use super::_entities::songtitles;
 use sea_orm::entity::prelude::*;
 pub type Songs = Entity;
 
@@ -25,6 +26,19 @@ impl Model {
         db: &DatabaseConnection,
     ) -> Result<Vec<super::songtitles::Model>, DbErr> {
         self.find_related(super::songtitles::Entity).all(db).await
+    }
+
+    pub async fn title(&self, db: &DatabaseConnection) -> Result<Option<String>, DbErr> {
+        let item = self
+            .find_related(super::songtitles::Entity)
+            .filter(songtitles::Column::IsDefault.eq(true))
+            .one(db)
+            .await?;
+
+        match item {
+            Some(item) => Ok(Some(item.title)),
+            None => Ok(None),
+        }
     }
 }
 

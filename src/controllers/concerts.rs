@@ -7,7 +7,10 @@ use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 use tracing::log::debug;
 
-use super::{cities::CityResponse, countries::CountryResponse, venues::VenueResponse};
+use super::{
+    cities::CityResponse, countries::CountryResponse, performances::PerformanceResponse,
+    sets::SetResponse, venues::VenueResponse,
+};
 use crate::models::_entities::concerts::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -43,6 +46,7 @@ pub struct ConcertResponse {
     pub venue: VenueResponse,
     pub artist_id: i32,
     pub slug: String,
+    pub sets: Option<Vec<SetResponse>>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -89,6 +93,7 @@ pub async fn list_with_details(State(ctx): State<AppContext>) -> Result<Response
                 venue: venue_response,
                 artist_id: concert.artist_id,
                 slug: concert.slug,
+                sets: None,
             });
         }
     }
@@ -157,11 +162,30 @@ pub async fn get_one_by_slug(
     let venue = venue.ok_or_else(|| Error::NotFound)?;
     let city = venue.city(&ctx.db).await?;
     let country = city.country(&ctx.db).await?;
+    let sets = concert.sets(&ctx.db).await?;
+
+    let mut setsdata: Vec<(crate::models::sets::Model, Vec<PerformanceResponse>)> = Vec::new();
+    for set in sets.clone() {
+        let performances = set.performances(&ctx.db).await?;
+        let mut perf_responses: Vec<PerformanceResponse> = Vec::new();
+        for p in performances {
+            let songtitle = p.songtitle_as_str(&ctx.db).await?;
+            let perftitle = p.performancetitle_as_str(&ctx.db).await?;
+            perf_responses.push(PerformanceResponse {
+                id: p.id,
+                sort_order: p.sort_order,
+                performance_title: perftitle.unwrap(),
+                songtitle: songtitle.unwrap(),
+            });
+        }
+        setsdata.push((set.clone(), perf_responses));
+    }
 
     // Convert models to responses
     let country_response = CountryResponse::from(country);
     let city_response = CityResponse::from((city, country_response.clone()));
     let venue_response = VenueResponse::from((venue, city_response.clone()));
+    let sets_response: Vec<SetResponse> = setsdata.into_iter().map(SetResponse::from).collect();
 
     let response = ConcertResponse {
         id: concert.id,
@@ -172,6 +196,7 @@ pub async fn get_one_by_slug(
         venue: venue_response,
         artist_id: concert.artist_id,
         slug: concert.slug,
+        sets: Some(sets_response),
     };
 
     format::json(response)
