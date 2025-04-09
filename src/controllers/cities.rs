@@ -14,9 +14,9 @@ use super::countries::CountryResponse;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
-    pub name: Option<String>,
+    pub name: String,
     pub country_id: i32,
-    pub slug: Option<String>,
+    pub slug: String,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -40,9 +40,9 @@ impl From<(Model, CountryResponse)> for CityResponse {
 
 impl Params {
     fn update(&self, item: &mut ActiveModel) {
-        item.name = Set(self.name.clone().unwrap());
+        item.name = Set(self.name.clone());
         item.country_id = Set(self.country_id);
-        item.slug = Set(self.slug.clone().unwrap());
+        item.slug = Set(self.slug.clone());
     }
 }
 
@@ -69,6 +69,7 @@ pub async fn list_cities(State(ctx): State<AppContext>) -> Result<Response> {
     format::json(Entity::find().all(&ctx.db).await?)
 }
 
+#[allow(clippy::unwrap_used)]
 pub async fn list_cities_with_countries(State(ctx): State<AppContext>) -> Result<Response> {
     let data = Entity::find()
         .find_also_related(countries::Entity)

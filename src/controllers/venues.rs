@@ -96,20 +96,10 @@ pub async fn load_by_slug(ctx: &AppContext, slug: String) -> Result<VenueRespons
         .and_also_related(countries::Entity)
         .one(&ctx.db)
         .await?
-        .unwrap();
+        .ok_or_else(|| Error::NotFound)?;
 
-    // let city = cities::Entity::find_by_id(venue.city_id)
-    //     .one(&ctx.db)
-    //     .await?
-    //     .unwrap();
-
-    // let country = countries::Entity::find_by_id(city.country_id)
-    //     .one(&ctx.db)
-    //     .await?
-    //     .unwrap();
-
-    let city = venue.1.unwrap();
-    let country = venue.2.unwrap();
+    let city = venue.1.ok_or_else(|| Error::NotFound)?;
+    let country = venue.2.ok_or_else(|| Error::NotFound)?;
 
     Ok(VenueResponse {
         id: venue.0.id,

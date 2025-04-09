@@ -154,13 +154,14 @@ pub async fn get_one_by_slug(
     let venue = crate::models::venues::Entity::find_by_id(concert.venue_id)
         .one(&ctx.db)
         .await?;
-    let city = venue.clone().unwrap().city(&ctx.db).await?;
+    let venue = venue.ok_or_else(|| Error::NotFound)?;
+    let city = venue.city(&ctx.db).await?;
     let country = city.country(&ctx.db).await?;
 
     // Convert models to responses
     let country_response = CountryResponse::from(country);
     let city_response = CityResponse::from((city, country_response.clone()));
-    let venue_response = VenueResponse::from((venue.unwrap(), city_response.clone()));
+    let venue_response = VenueResponse::from((venue, city_response.clone()));
 
     let response = ConcertResponse {
         id: concert.id,

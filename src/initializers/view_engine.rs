@@ -28,6 +28,7 @@ impl Initializer for ViewEngineInitializer {
                 .customize(|bundle| bundle.set_use_isolating(false))
                 .build()
                 .map_err(|e| Error::string(&e.to_string()))?;
+            #[allow(clippy::expect_used)]
             #[cfg(debug_assertions)]
             tera_engine
                 .tera
