@@ -13,7 +13,7 @@ use mpdb::{
 async fn main() -> loco_rs::Result<()> {
     let ctx = playground::<App>().await?;
 
-    println!("welcome to playground. edit me at `examples/playground.rs`");
+    // println!("welcome to playground. edit me at `examples/playground.rs`");
 
     // let active_model: countries::ActiveModel = countries::ActiveModel {
     //     name: Set(Some("Algulia".to_string())),
@@ -63,24 +63,24 @@ async fn main() -> loco_rs::Result<()> {
 
     // let res = countries::Entity::find_all_venues(&ctx.db, 12).await;
 
-    let res = venues::Model::find_by_name(&ctx.db, "UFFA").await;
-    match res.as_ref() {
-        Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
-        Err(e) => println!("ERROR: {}", e),
-    }
+    // let res = venues::Model::find_by_name(&ctx.db, "UFFA").await;
+    // match res.as_ref() {
+    //     Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
+    //     Err(e) => println!("ERROR: {}", e),
+    // }
 
-    let res2 = res
-        .as_ref()
-        .unwrap()
-        .city(&ctx.db)
-        .await
-        .unwrap()
-        .venues(&ctx.db)
-        .await;
-    match res2 {
-        Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
-        Err(e) => println!("ERROR: {}", e),
-    }
+    // let res2 = res
+    //     .as_ref()
+    //     .unwrap()
+    //     .city(&ctx.db)
+    //     .await
+    //     .unwrap()
+    //     .venues(&ctx.db)
+    //     .await;
+    // match res2 {
+    //     Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
+    //     Err(e) => println!("ERROR: {}", e),
+    // }
 
     // let res3 = res.unwrap().concerts(&ctx.db).await;
     // match res3 {
@@ -88,15 +88,28 @@ async fn main() -> loco_rs::Result<()> {
     //     Err(e) => println!("ERROR: {}", e),
     // }
 
-    let set = sets::Entity::find_by_id(3152).one(&ctx.db).await?;
-    let res = set.as_ref().unwrap().songs(&ctx.db).await;
-    match res {
-        Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
-        Err(e) => println!("ERROR: {}", e),
-    }
+    // let set = sets::Entity::find_by_id(3152).one(&ctx.db).await?;
+    // let res = set.as_ref().unwrap().songs(&ctx.db).await;
+    // match res {
+    //     Ok(r) => println!("{}", serde_json::to_string_pretty(&r).unwrap()),
+    //     Err(e) => println!("ERROR: {}", e),
+    // }
 
-    let concerts = concerts::Model::find_all_with_venue_and_artist(&ctx.db).await?;
-    println!("{}", serde_json::to_string_pretty(&concerts[0]).unwrap());
+    // let concerts = concerts::Model::find_all_with_venue_and_artist(&ctx.db).await?;
+    // println!("{}", serde_json::to_string_pretty(&concerts[0]).unwrap());
+
+    let concert = concerts::Model::find_by_slug(&ctx.db, "motorpsycho-2019-10-11").await?;
+    let sets = concert.sets(&ctx.db).await?;
+    println!("{}", serde_json::json!(sets));
+
+    for set in sets {
+        let perfs = set.performances(&ctx.db).await?;
+
+        // println!("{:#?}", serde_json::json!(&p));
+        for p in perfs {
+            println!("{:#?}", p.songtitle(&ctx.db).await?);
+        }
+    }
 
     Ok(())
 }
