@@ -69,7 +69,6 @@ pub async fn list(State(ctx): State<AppContext>) -> Result<Response> {
 
 #[debug_handler]
 pub async fn list_with_details(State(ctx): State<AppContext>) -> Result<Response> {
-    let ctx = &ctx;
     let items = Model::find_all_with_venue_and_artist(&ctx.db).await?;
 
     let mut responses = Vec::new();

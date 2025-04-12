@@ -5,7 +5,7 @@ use axum::debug_handler;
 use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 
-use super::cities::CityResponse;
+use super::{cities::CityResponse, countries::CountryResponse};
 use crate::models::_entities::venues::{ActiveModel, Entity, Model};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -52,6 +52,31 @@ async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
 #[debug_handler]
 pub async fn list(State(ctx): State<AppContext>) -> Result<Response> {
     format::json(Entity::find().all(&ctx.db).await?)
+}
+
+#[allow(clippy::unwrap_used)]
+pub async fn list_with_details(State(ctx): State<AppContext>) -> Result<Response> {
+    let items = Entity::find().all(&ctx.db).await?;
+
+    let mut responses = Vec::new();
+    for venue in items {
+        // Get venue, city and country data
+        let city = venue.city(&ctx.db).await?;
+        let country = city.country(&ctx.db).await?;
+
+        // Convert models to responses
+        let country_response = CountryResponse::from(country);
+        let city_response = CityResponse::from((city, country_response.clone()));
+
+        responses.push(VenueResponse {
+            id: venue.id,
+            name: venue.name,
+            slug: venue.slug,
+            city: city_response,
+        });
+    }
+
+    format::json(responses)
 }
 
 #[debug_handler]
@@ -132,6 +157,7 @@ pub fn routes() -> Routes {
         .add("{id}", delete(remove))
         .add("{id}", put(update))
         .add("{id}", patch(update))
+        .add("/with-details", get(list_with_details))
 }
 
 pub fn api_by_slug_routes() -> Routes {
