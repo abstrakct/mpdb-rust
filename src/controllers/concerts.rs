@@ -171,6 +171,7 @@ pub async fn get_one_by_slug(
         for p in performances {
             let songtitle = p.songtitle_as_str(&ctx.db).await?;
             let perftitle = p.performancetitle_as_str(&ctx.db).await?;
+            let perfslug = p.performancetitle_slug(&ctx.db).await?;
             perf_responses.push(PerformanceResponse {
                 id: p.id,
                 sort_order: p.sort_order,
@@ -180,6 +181,7 @@ pub async fn get_one_by_slug(
                     None
                 },
                 songtitle: songtitle.unwrap(),
+                slug: perfslug.unwrap(),
             });
         }
         setsdata.push((set.clone(), perf_responses));

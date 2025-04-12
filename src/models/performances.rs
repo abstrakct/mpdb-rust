@@ -56,6 +56,21 @@ impl Model {
         }
         // title.ok_or_else(|| ModelError::EntityNotFound)
     }
+
+    pub async fn performancetitle_slug(
+        &self,
+        db: &DatabaseConnection,
+    ) -> Result<Option<String>, DbErr> {
+        let item = songtitles::Entity::find_by_id(self.songtitle_id)
+            .one(db)
+            .await?;
+
+        match item {
+            Some(item) => Ok(Some(item.slug)),
+            None => Ok(None),
+        }
+        // title.ok_or_else(|| ModelError::EntityNotFound)
+    }
 }
 
 // implement your write-oriented logic here

@@ -36,6 +36,7 @@ pub struct PerformanceResponse {
     pub sort_order: i32,
     pub performance_title: Option<String>,
     pub songtitle: String,
+    pub slug: String,
 }
 
 impl From<Model> for PerformanceResponse {
@@ -45,6 +46,7 @@ impl From<Model> for PerformanceResponse {
             sort_order: item.sort_order,
             performance_title: None,
             songtitle: "".into(),
+            slug: "".into(),
         }
     }
 }
