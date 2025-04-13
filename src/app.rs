@@ -65,6 +65,7 @@ impl Hooks for App {
             .add_route(controllers::countries::api_routes())
             .add_route(controllers::countries::api_by_slug_routes())
             .add_route(controllers::auth::routes())
+            .add_route(controllers::metadata::api_routes())
             .add_route(controllers::dashboard::routes())
             // Web routes
             .add_route(controllers::cities::web_routes())

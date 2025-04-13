@@ -7,6 +7,7 @@ use mpdb::{
     app::App,
     models::_entities::{cities, countries, venues},
 };
+use sea_orm::PaginatorTrait;
 // use sha1::{Digest, Sha1};
 
 #[tokio::main]
@@ -107,9 +108,12 @@ async fn main() -> loco_rs::Result<()> {
 
         // println!("{:#?}", serde_json::json!(&p));
         for p in perfs {
-            println!("{:#?}", p.songtitle(&ctx.db).await?);
+            println!("{:#?}", p.songtitle_as_str(&ctx.db).await?);
         }
     }
+
+    let count = concerts::Entity::find().count(&ctx.db).await?;
+    println!("concerts count: {count}");
 
     Ok(())
 }
