@@ -15,6 +15,7 @@ mod m20250211_181553_sets;
 mod m20250211_181843_performances;
 mod m20250416_101511_country_stats;
 mod m20250416_143314_city_stats;
+
 pub struct Migrator;
 
 #[async_trait::async_trait]
