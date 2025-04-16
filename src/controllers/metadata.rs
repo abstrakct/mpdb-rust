@@ -6,7 +6,7 @@ use loco_rs::prelude::*;
 use sea_orm::PaginatorTrait;
 use serde::{Deserialize, Serialize};
 
-#[derive(Clone, Debug, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct StatisticsMetadata {
     pub num_concerts: u64,
     pub num_countries: u64,
