@@ -10,3 +10,5 @@ mod performances;
 mod sets;
 mod songs;
 mod songtitles;
+
+mod statistic_types;

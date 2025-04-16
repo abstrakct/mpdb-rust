@@ -9,3 +9,4 @@ pub mod songs;
 pub mod songtitles;
 pub mod users;
 pub mod venues;
+pub mod statistic_types;
