@@ -14,14 +14,16 @@ impl Task for RefreshCountryStats {
     }
     async fn run(&self, ctx: &AppContext, _vars: &task::Vars) -> Result<()> {
         let sql = r#"
-            INSERT INTO country_stats (country_id, num_cities, num_venues)
+            INSERT INTO country_stats (country_id, num_cities, num_venues, num_concerts)
             SELECT
                 c.id,
                 COUNT(DISTINCT ci.id) AS num_cities,
-                COUNT(v.id) AS num_venues
+                COUNT(DISTINCT v.id) AS num_venues,
+                COUNT(DISTINCT co.id) AS num_concerts
             FROM countries c
             LEFT JOIN cities ci ON ci.country_id = c.id
             LEFT JOIN venues v ON v.city_id = ci.id
+            LEFT JOIN concerts co ON co.venue_id = v.id
             GROUP BY c.id;
         "#;
 
