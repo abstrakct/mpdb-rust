@@ -12,6 +12,7 @@ pub struct Model {
     pub id: i32,
     pub num_cities: Option<i32>,
     pub num_venues: Option<i32>,
+    pub num_concerts: Option<i32>,
     pub country_id: i32,
 }
 
