@@ -11,6 +11,8 @@ use crate::models::_entities::{
     countries::{ActiveModel, Entity, Model},
 };
 
+use super::metadata::StatisticsMetadata;
+
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
     pub name: String,
@@ -24,6 +26,7 @@ pub struct CountryResponse {
     pub name: String,
     pub slug: String,
     pub code: Option<String>,
+    pub stats: Option<StatisticsMetadata>,
 }
 
 impl From<Model> for CountryResponse {
@@ -33,6 +36,19 @@ impl From<Model> for CountryResponse {
             name: item.name,
             slug: item.slug,
             code: item.code,
+            stats: None,
+        }
+    }
+}
+
+impl From<(Model, StatisticsMetadata)> for CountryResponse {
+    fn from((item, stats): (Model, StatisticsMetadata)) -> Self {
+        Self {
+            id: item.id,
+            name: item.name,
+            slug: item.slug,
+            code: item.code,
+            stats: Some(stats),
         }
     }
 }
