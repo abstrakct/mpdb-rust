@@ -16,6 +16,7 @@ impl MigrationTrait for Migration {
                 ("disambiguation", ColType::StringNull),
                 ("sort_order", ColType::IntegerNull),
                 ("source", ColType::StringNull),
+                ("slug", ColType::StringUniq),
             ],
             &[("venue", ""), ("artist", "")],
         )

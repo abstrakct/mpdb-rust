@@ -14,6 +14,8 @@ impl MigrationTrait for Migration {
                 ("id", ColType::PkAuto),
                 ("title", ColType::String),
                 ("is_default", ColType::Boolean),
+                ("slug", ColType::StringUniq),
+                ("alias_for", ColType::IntegerNull),
             ],
             &[("song", "")],
         )

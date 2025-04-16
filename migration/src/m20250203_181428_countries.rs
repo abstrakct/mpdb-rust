@@ -14,7 +14,7 @@ impl MigrationTrait for Migration {
                 ("id", ColType::PkAuto),
                 ("name", ColType::StringNull),
                 ("code", ColType::StringNull),
-                ("uuid", ColType::UuidUniq),
+                ("slug", ColType::StringUniq),
             ],
             &[],
         )
