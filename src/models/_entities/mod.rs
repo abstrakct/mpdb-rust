@@ -10,6 +10,5 @@ pub mod performances;
 pub mod sets;
 pub mod songs;
 pub mod songtitles;
-pub mod statistic_types;
 pub mod users;
 pub mod venues;

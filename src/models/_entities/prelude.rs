@@ -8,6 +8,5 @@ pub use super::performances::Entity as Performances;
 pub use super::sets::Entity as Sets;
 pub use super::songs::Entity as Songs;
 pub use super::songtitles::Entity as Songtitles;
-pub use super::statistic_types::Entity as StatisticTypes;
 pub use super::users::Entity as Users;
 pub use super::venues::Entity as Venues;
