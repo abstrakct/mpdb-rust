@@ -4,6 +4,7 @@ pub mod prelude;
 
 pub mod artists;
 pub mod cities;
+pub mod city_stats;
 pub mod concerts;
 pub mod countries;
 pub mod country_stats;

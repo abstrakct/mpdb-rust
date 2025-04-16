@@ -2,6 +2,7 @@
 
 pub use super::artists::Entity as Artists;
 pub use super::cities::Entity as Cities;
+pub use super::city_stats::Entity as CityStats;
 pub use super::concerts::Entity as Concerts;
 pub use super::countries::Entity as Countries;
 pub use super::country_stats::Entity as CountryStats;

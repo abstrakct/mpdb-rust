@@ -11,13 +11,15 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub name: String,
-    pub country_id: i32,
     #[sea_orm(unique)]
     pub slug: String,
+    pub country_id: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
+    #[sea_orm(has_many = "super::city_stats::Entity")]
+    CityStats,
     #[sea_orm(
         belongs_to = "super::countries::Entity",
         from = "Column::CountryId",
@@ -28,6 +30,12 @@ pub enum Relation {
     Countries,
     #[sea_orm(has_many = "super::venues::Entity")]
     Venues,
+}
+
+impl Related<super::city_stats::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::CityStats.def()
+    }
 }
 
 impl Related<super::countries::Entity> for Entity {

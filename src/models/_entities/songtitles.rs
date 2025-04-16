@@ -12,10 +12,10 @@ pub struct Model {
     pub id: i32,
     pub title: String,
     pub is_default: bool,
-    pub song_id: i32,
     #[sea_orm(unique)]
     pub slug: String,
     pub alias_for: Option<i32>,
+    pub song_id: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
