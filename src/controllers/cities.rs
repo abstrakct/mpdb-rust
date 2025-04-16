@@ -11,6 +11,7 @@ use crate::models::_entities::countries;
 use crate::views;
 
 use super::countries::CountryResponse;
+use super::metadata::StatisticsMetadata;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
@@ -25,6 +26,7 @@ pub struct CityResponse {
     pub name: String,
     pub slug: String,
     pub country: CountryResponse,
+    pub stats: Option<StatisticsMetadata>,
 }
 
 impl From<(Model, CountryResponse)> for CityResponse {
@@ -34,6 +36,19 @@ impl From<(Model, CountryResponse)> for CityResponse {
             name: city.name,
             slug: city.slug,
             country,
+            stats: None,
+        }
+    }
+}
+
+impl From<(Model, StatisticsMetadata, CountryResponse)> for CityResponse {
+    fn from((city, stats, country): (Model, StatisticsMetadata, CountryResponse)) -> Self {
+        Self {
+            id: city.id,
+            name: city.name,
+            slug: city.slug,
+            country,
+            stats: Some(stats),
         }
     }
 }
@@ -72,17 +87,35 @@ pub async fn list_cities(State(ctx): State<AppContext>) -> Result<Response> {
 #[allow(clippy::unwrap_used)]
 pub async fn list_cities_with_countries(State(ctx): State<AppContext>) -> Result<Response> {
     let data = Entity::find()
+        .find_also_related(crate::models::_entities::city_stats::Entity)
         .find_also_related(countries::Entity)
         .all(&ctx.db)
         .await?;
 
     let result = data
         .into_iter()
-        .map(|(city, country)| CityResponse {
-            id: city.id,
-            name: city.name,
-            slug: city.slug,
-            country: country.unwrap().into(),
+        .map(|(city, stats, country)| {
+            let stats_metadata = stats.map(|s| StatisticsMetadata {
+                num_concerts: s.num_concerts.unwrap_or(0) as u64,
+                num_countries: 1, // This is always 1 for a single city
+                num_cities: 1,    // This is always 1 for a single city
+                num_venues: s.num_venues.unwrap_or(0) as u64,
+                num_performances: 0, // Not relevant for city stats
+                num_songs: 0,        // Not relevant for city stats
+            });
+
+            // CityResponse {
+            //     id: city.id,
+            //     name: city.name,
+            //     slug: city.slug,
+            //     country: country.unwrap().into(),
+            //     stats: stats.unwrap_or_default(),
+            // }
+            CityResponse::from((
+                city,
+                stats_metadata.unwrap_or_default(),
+                country.unwrap().into(),
+            ))
         })
         .collect::<Vec<CityResponse>>();
 

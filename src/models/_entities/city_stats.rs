@@ -11,6 +11,7 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub num_venues: Option<i32>,
+    pub num_concerts: Option<i32>,
     pub city_id: i32,
 }
 

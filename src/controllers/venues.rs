@@ -135,6 +135,7 @@ pub async fn load_by_slug(ctx: &AppContext, slug: String) -> Result<VenueRespons
             name: city.name.clone(),
             slug: city.slug.clone(),
             country: country.into(),
+            stats: None,
         },
     })
 }
