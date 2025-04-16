@@ -6,6 +6,7 @@ pub mod artists;
 pub mod cities;
 pub mod concerts;
 pub mod countries;
+pub mod country_stats;
 pub mod performances;
 pub mod sets;
 pub mod songs;
