@@ -114,6 +114,7 @@ pub async fn get_one(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Resu
 }
 
 pub async fn load_by_slug(ctx: &AppContext, slug: String) -> Result<VenueResponse> {
+    // TODO: maybe this can be moved to the Model?
     use crate::models::_entities::{cities, countries};
     let venue = Entity::find()
         .filter(crate::models::_entities::venues::Column::Slug.eq(slug))
