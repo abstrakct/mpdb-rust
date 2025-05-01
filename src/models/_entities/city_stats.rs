@@ -4,17 +4,14 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "venues")]
+#[sea_orm(table_name = "city_stats")]
 pub struct Model {
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: DateTimeWithTimeZone,
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub name: String,
-    #[sea_orm(unique)]
-    pub unique_name: String,
-    #[sea_orm(unique)]
-    pub slug: String,
+    pub num_venues: Option<i32>,
+    pub num_concerts: Option<i32>,
     pub city_id: i32,
 }
 
@@ -28,18 +25,10 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Cities,
-    #[sea_orm(has_many = "super::concerts::Entity")]
-    Concerts,
 }
 
 impl Related<super::cities::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Cities.def()
-    }
-}
-
-impl Related<super::concerts::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Concerts.def()
     }
 }

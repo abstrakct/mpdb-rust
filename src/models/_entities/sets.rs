@@ -13,8 +13,8 @@ pub struct Model {
     pub name: Option<String>,
     #[sea_orm(unique)]
     pub unique_name: String,
-    pub concert_id: i32,
     pub sort_order: i32,
+    pub concert_id: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

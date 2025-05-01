@@ -71,6 +71,7 @@ pub async fn list(State(ctx): State<AppContext>) -> Result<Response> {
 pub async fn list_with_details(State(ctx): State<AppContext>) -> Result<Response> {
     let items = Model::find_all_with_venue_and_artist(&ctx.db).await?;
 
+    // Map results to Response structs
     let mut responses = Vec::new();
     for (concert, venue_opt, _artist_opt) in items {
         // Get venue, city and country data

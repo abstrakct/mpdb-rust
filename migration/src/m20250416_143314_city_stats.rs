@@ -9,18 +9,18 @@ impl MigrationTrait for Migration {
     async fn up(&self, m: &SchemaManager) -> Result<(), DbErr> {
         create_table(
             m,
-            "cities",
+            "city_stats",
             &[
                 ("id", ColType::PkAuto),
-                ("name", ColType::String),
-                ("slug", ColType::StringUniq),
+                ("num_venues", ColType::IntegerNull),
+                ("num_concerts", ColType::IntegerNull),
             ],
-            &[("country", "")],
+            &[("city", "")],
         )
         .await
     }
 
     async fn down(&self, m: &SchemaManager) -> Result<(), DbErr> {
-        drop_table(m, "cities").await
+        drop_table(m, "city_stats").await
     }
 }

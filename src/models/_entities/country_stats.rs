@@ -4,22 +4,20 @@ use sea_orm::entity::prelude::*;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, PartialEq, DeriveEntityModel, Eq, Serialize, Deserialize)]
-#[sea_orm(table_name = "cities")]
+#[sea_orm(table_name = "country_stats")]
 pub struct Model {
     pub created_at: DateTimeWithTimeZone,
     pub updated_at: DateTimeWithTimeZone,
     #[sea_orm(primary_key)]
     pub id: i32,
-    pub name: String,
-    #[sea_orm(unique)]
-    pub slug: String,
+    pub num_cities: Option<i32>,
+    pub num_venues: Option<i32>,
+    pub num_concerts: Option<i32>,
     pub country_id: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
 pub enum Relation {
-    #[sea_orm(has_many = "super::city_stats::Entity")]
-    CityStats,
     #[sea_orm(
         belongs_to = "super::countries::Entity",
         from = "Column::CountryId",
@@ -28,24 +26,10 @@ pub enum Relation {
         on_delete = "Cascade"
     )]
     Countries,
-    #[sea_orm(has_many = "super::venues::Entity")]
-    Venues,
-}
-
-impl Related<super::city_stats::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::CityStats.def()
-    }
 }
 
 impl Related<super::countries::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::Countries.def()
-    }
-}
-
-impl Related<super::venues::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::Venues.def()
     }
 }

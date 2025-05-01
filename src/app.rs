@@ -78,6 +78,8 @@ impl Hooks for App {
 
     #[allow(unused_variables)]
     fn register_tasks(tasks: &mut Tasks) {
+        tasks.register(tasks::refresh_country_stats::RefreshCountryStats);
+        tasks.register(tasks::refresh_city_stats::RefreshCityStats);
         // tasks-inject (do not remove)
     }
     async fn truncate(ctx: &AppContext) -> Result<()> {

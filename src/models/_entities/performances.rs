@@ -11,12 +11,12 @@ pub struct Model {
     #[sea_orm(primary_key)]
     pub id: i32,
     pub segue: bool,
+    pub sort_order: i32,
     pub set_id: i32,
     pub concert_id: i32,
     pub song_id: i32,
     pub artist_id: i32,
     pub songtitle_id: i32,
-    pub sort_order: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]

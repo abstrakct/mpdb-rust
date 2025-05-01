@@ -67,7 +67,27 @@ async fn load_item(ctx: &AppContext, id: i32) -> Result<Model> {
 }
 
 pub async fn list_countries(State(ctx): State<AppContext>) -> Result<Response> {
-    format::json(Entity::find().all(&ctx.db).await?)
+    let countries = Entity::find()
+        .find_also_related(crate::models::_entities::country_stats::Entity)
+        .all(&ctx.db)
+        .await?;
+
+    let responses = countries
+        .into_iter()
+        .map(|(country, stats)| {
+            let stats_metadata = stats.map(|s| StatisticsMetadata {
+                num_concerts: s.num_concerts.unwrap_or(0) as u64,
+                num_countries: 1, // This is always 1 for a single country
+                num_cities: s.num_cities.unwrap_or(0) as u64,
+                num_venues: s.num_venues.unwrap_or(0) as u64,
+                num_performances: 0, // Not relevant for country stats
+                num_songs: 0,        // Not relevant for country stats
+            });
+            CountryResponse::from((country, stats_metadata.unwrap_or_default()))
+        })
+        .collect::<Vec<CountryResponse>>();
+
+    format::json(responses)
 }
 
 pub async fn list_cities(Path(id): Path<i32>, State(ctx): State<AppContext>) -> Result<Response> {
