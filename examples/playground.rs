@@ -1,13 +1,15 @@
 #[allow(unused_imports)]
 use loco_rs::{cli::playground, prelude::*};
 
-use mpdb::models::{_entities::sets, concerts};
+use mpdb::models::{
+    _entities::{performances, sets},
+    concerts, songs,
+};
 #[allow(unused_imports)]
 use mpdb::{
     app::App,
     models::_entities::{cities, countries, venues},
 };
-use sea_orm::PaginatorTrait;
 // use sha1::{Digest, Sha1};
 
 #[tokio::main]
@@ -99,21 +101,30 @@ async fn main() -> loco_rs::Result<()> {
     // let concerts = concerts::Model::find_all_with_venue_and_artist(&ctx.db).await?;
     // println!("{}", serde_json::to_string_pretty(&concerts[0]).unwrap());
 
-    let concert = concerts::Model::find_by_slug(&ctx.db, "motorpsycho-2019-10-11").await?;
-    let sets = concert.sets(&ctx.db).await?;
-    println!("{}", serde_json::json!(sets));
+    // let concert = concerts::Model::find_by_slug(&ctx.db, "motorpsycho-2019-10-11").await?;
+    // let sets = concert.sets(&ctx.db).await?;
+    // println!("{}", serde_json::json!(sets));
 
-    for set in sets {
-        let perfs = set.performances(&ctx.db).await?;
+    // for set in sets {
+    //     let perfs = set.performances(&ctx.db).await?;
 
-        // println!("{:#?}", serde_json::json!(&p));
-        for p in perfs {
-            println!("{:#?}", p.songtitle_as_str(&ctx.db).await?);
-        }
-    }
+    //     // println!("{:#?}", serde_json::json!(&p));
+    //     for p in perfs {
+    //         println!("{:#?}", p.songtitle_as_str(&ctx.db).await?);
+    //     }
+    // }
 
-    let count = concerts::Entity::find().count(&ctx.db).await?;
-    println!("concerts count: {count}");
+    // let count = concerts::Entity::find().count(&ctx.db).await?;
+    // println!("concerts count: {count}");
+
+    let song = songs::Entity::find_by_id(1).one(&ctx.db).await?;
+    let performances = song.unwrap().performances(&ctx.db).await?;
+    println!("{:#?}", serde_json::json!(&performances));
+
+    let p = performances::Entity::find_by_id(1).one(&ctx.db).await?;
+    println!("{:#?}", p);
+    let next = p.unwrap().prev(&ctx.db).await?;
+    println!("{:#?}", next);
 
     Ok(())
 }

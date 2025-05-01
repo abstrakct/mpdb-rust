@@ -40,6 +40,13 @@ impl Model {
             None => Ok(None),
         }
     }
+
+    pub async fn performances(
+        &self,
+        db: &DatabaseConnection,
+    ) -> Result<Vec<super::performances::Model>, DbErr> {
+        self.find_related(super::performances::Entity).all(db).await
+    }
 }
 
 // implement your write-oriented logic here

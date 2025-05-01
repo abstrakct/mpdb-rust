@@ -1,5 +1,6 @@
-pub use super::_entities::performances::{ActiveModel, Entity, Model};
+pub use super::_entities::performances::{self, ActiveModel, Entity, Model};
 use super::_entities::songtitles;
+use loco_rs::prelude::*;
 use sea_orm::entity::prelude::*;
 pub type Performances = Entity;
 
@@ -28,7 +29,7 @@ impl Model {
     //     title.ok_or_else(|| ModelError::EntityNotFound)
     // }
 
-    pub async fn songtitle_as_str(&self, db: &DatabaseConnection) -> Result<Option<String>, DbErr> {
+    pub async fn songtitle_as_str(&self, db: &DatabaseConnection) -> ModelResult<Option<String>> {
         let item = songtitles::Entity::find()
             .filter(songtitles::Column::SongId.eq(self.song_id))
             .filter(songtitles::Column::IsDefault.eq(true))
@@ -39,13 +40,12 @@ impl Model {
             Some(item) => Ok(Some(item.title)),
             None => Ok(None),
         }
-        // title.ok_or_else(|| ModelError::EntityNotFound)
     }
 
     pub async fn performancetitle_as_str(
         &self,
         db: &DatabaseConnection,
-    ) -> Result<Option<String>, DbErr> {
+    ) -> ModelResult<Option<String>> {
         let item = songtitles::Entity::find_by_id(self.songtitle_id)
             .one(db)
             .await?;
@@ -54,13 +54,12 @@ impl Model {
             Some(item) => Ok(Some(item.title)),
             None => Ok(None),
         }
-        // title.ok_or_else(|| ModelError::EntityNotFound)
     }
 
     pub async fn performancetitle_slug(
         &self,
         db: &DatabaseConnection,
-    ) -> Result<Option<String>, DbErr> {
+    ) -> ModelResult<Option<String>> {
         let item = songtitles::Entity::find_by_id(self.songtitle_id)
             .one(db)
             .await?;
@@ -69,7 +68,42 @@ impl Model {
             Some(item) => Ok(Some(item.slug)),
             None => Ok(None),
         }
-        // title.ok_or_else(|| ModelError::EntityNotFound)
+    }
+
+    /// Finds the previous performance relative to this one.
+    /// Returns None if this is the first performance in the set.
+    ///
+    /// # Errors
+    ///
+    /// If DB query fails.
+    pub async fn prev(&self, db: &DatabaseConnection) -> ModelResult<Option<Self>> {
+        if self.sort_order == 0 {
+            return Ok(None);
+        }
+
+        let item = Entity::find()
+            .filter(performances::Column::SetId.eq(self.set_id))
+            .filter(performances::Column::SortOrder.eq(self.sort_order - 1))
+            .one(db)
+            .await?;
+
+        Ok(item)
+    }
+
+    /// Finds the next performance relative to this one.
+    /// Returns None if this is the last performance in the set.
+    ///
+    /// # Errors
+    ///
+    /// If DB query fails.
+    pub async fn next(&self, db: &DatabaseConnection) -> ModelResult<Option<Self>> {
+        let item = Entity::find()
+            .filter(performances::Column::SetId.eq(self.set_id))
+            .filter(performances::Column::SortOrder.eq(self.sort_order + 1))
+            .one(db)
+            .await?;
+
+        Ok(item)
     }
 }
 
